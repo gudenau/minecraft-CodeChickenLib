@@ -14,6 +14,7 @@ public class CCLNetwork {
 
     //Client handled.
     public static final int C_ADD_LANDING_EFFECTS = 1;
+    @Deprecated(forRemoval = true)
     public static final int C_OPEN_CONTAINER = 10;
 
     //Login handled.

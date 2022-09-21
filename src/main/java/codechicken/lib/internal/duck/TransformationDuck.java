@@ -1,4 +1,4 @@
-package codechicken.lib.capability.fabric;
+package codechicken.lib.internal.duck;
 
 import com.mojang.math.Matrix3f;
 import org.jetbrains.annotations.NotNull;

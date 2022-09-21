@@ -1,24 +1,26 @@
 package codechicken.lib.util;
 
 import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.internal.network.CCLNetwork;
-import codechicken.lib.packet.PacketCustom;
+import codechicken.lib.data.MCDataPacket;
+import codechicken.lib.internal.mixin.accessor.GameProfileCacheAccessor;
+import codechicken.lib.internal.mixin.accessor.MinecraftServerAccessor;
 import com.mojang.authlib.GameProfile;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.LogicalSidedProvider;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraft.core.Registry;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -26,16 +28,20 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static codechicken.lib.internal.network.CCLNetwork.C_OPEN_CONTAINER;
-
 /**
  * Created by covers1624 on 22/10/2016.
  */
 public class ServerUtils {
-
+    private static MinecraftServer server;
+    
+    static {
+        ServerLifecycleEvents.SERVER_STARTING.register((serv) -> server = serv);
+        ServerLifecycleEvents.SERVER_STOPPED.register((serv) -> server = null);
+    }
+    
     @Deprecated
     public static MinecraftServer getServer() {
-        return (MinecraftServer) LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
+        return server;
     }
 
     @Deprecated
@@ -56,7 +62,7 @@ public class ServerUtils {
     }
 
     public static Path getSaveDirectory(ResourceKey<Level> dimension) {
-        return getServer().storageSource.getDimensionPath(dimension);
+        return ((MinecraftServerAccessor) getServer()).getStorageSource().getDimensionPath(dimension);
     }
 
     public static GameProfile getGameProfile(String username) {
@@ -67,7 +73,7 @@ public class ServerUtils {
 
         //try and access it in the cache without forcing a save
         username = username.toLowerCase(Locale.ROOT);
-        GameProfileCache.GameProfileInfo cachedEntry = getServer().getProfileCache().profilesByName.get(username);
+        GameProfileCache.GameProfileInfo cachedEntry = ((GameProfileCacheAccessor) getServer().getProfileCache()).getProfilesByName().get(username);
         if (cachedEntry != null) {
             return cachedEntry.getProfile();
         }
@@ -95,6 +101,26 @@ public class ServerUtils {
         if (player.level.isClientSide()) {
             return;
         }
+        
+        var buffer = PacketByteBufs.create();
+        player.openMenu(new ExtendedScreenHandlerFactory() {
+            @Override
+            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+                packetConsumer.accept(new MCDataPacket(buffer));
+            }
+    
+            @Override
+            public Component getDisplayName() {
+                return containerProvider.getDisplayName();
+            }
+    
+            @Nullable
+            @Override
+            public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                return containerProvider.createMenu(i, inventory, player);
+            }
+        });
+        /*
         player.doCloseContainer();
         player.nextContainerCounter();
         int containerId = player.containerCounter;
@@ -112,5 +138,8 @@ public class ServerUtils {
         player.containerMenu = container;
         player.initMenu(player.containerMenu);
         MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, container));
+         */
     }
+    
+    public static void init() {}
 }

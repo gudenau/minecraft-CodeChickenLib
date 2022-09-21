@@ -24,9 +24,12 @@
   "mixins": [
     "EntityMixin",
     "LivingEntityMixin",
+    "MappedRegistryMixin",
     "TransformationMixin",
     "accessor.ArmorMaterialsAccessor",
     "accessor.DirectionAccessor",
+    "accessor.GameProfileCacheAccessor",
+    "accessor.MinecraftServerAccessor",
     "accessor.ResourceKeyArgumentAccessor",
     "accessor.Vector4fAccessor"
   ]

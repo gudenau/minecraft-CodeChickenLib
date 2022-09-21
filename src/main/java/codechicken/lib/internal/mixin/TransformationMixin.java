@@ -1,6 +1,6 @@
 package codechicken.lib.internal.mixin;
 
-import codechicken.lib.capability.fabric.TransformationDuck;
+import codechicken.lib.internal.duck.TransformationDuck;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Transformation;

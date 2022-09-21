@@ -1,11 +1,13 @@
 package codechicken.lib.render.block;
 
+import codechicken.lib.internal.duck.MappedRegistryDuck;
 import codechicken.lib.internal.mixin.accessor.client.MinecraftAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.Holder;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -54,10 +56,11 @@ public class BlockRenderingRegistry {
      * @throws IllegalArgumentException If the same Block is registered twice.
      */
     public static synchronized void registerRenderer(Block block, ICCBlockRenderer renderer) {
-        Holder<Block> delegate = Registry.BLOCK.getDelegateOrThrow(block);
-        ICCBlockRenderer prev = blockRenderers.get(Registry.BLOCK.getDelegateOrThrow(block));
+        var registry = (MappedRegistry<Block> & MappedRegistryDuck<Block>) Registry.BLOCK;
+        Holder<Block> delegate = registry.getHolderOrThrow(block);
+        ICCBlockRenderer prev = blockRenderers.get(registry.getDelegateOrThrow(block));
         if (prev != null) {
-            throw new IllegalArgumentException("Renderer already registered for block. " + Registry.BLOCK.getKey(block));
+            throw new IllegalArgumentException("Renderer already registered for block. " + registry.getKey(block));
         }
         blockRenderers.put(delegate, renderer);
     }
@@ -73,10 +76,11 @@ public class BlockRenderingRegistry {
      * @throws IllegalArgumentException If the same Fluid is registered twice.
      */
     public static synchronized void registerRenderer(Fluid fluid, ICCBlockRenderer renderer) {
-        Holder<Fluid> delegate = Registry.FLUID.getDelegateOrThrow(fluid);
+        var registry = (MappedRegistry<Fluid> & MappedRegistryDuck<Fluid>) Registry.FLUID;
+        Holder<Fluid> delegate = registry.getDelegateOrThrow(fluid);
         ICCBlockRenderer prev = blockRenderers.get(delegate);
         if (prev != null) {
-            throw new IllegalArgumentException("Renderer already registered for fluid. " + Registry.FLUID.getKey(fluid));
+            throw new IllegalArgumentException("Renderer already registered for fluid. " + registry.getKey(fluid));
         }
         fluidRenderers.put(delegate, renderer);
     }
@@ -93,7 +97,8 @@ public class BlockRenderingRegistry {
 
     @Nullable
     static ICCBlockRenderer findFor(Block block, Predicate<ICCBlockRenderer> pred) {
-        ICCBlockRenderer found = blockRenderers.get(Registry.BLOCK.getDelegateOrThrow(block));
+        @SuppressWarnings("unchecked")
+        ICCBlockRenderer found = blockRenderers.get(((MappedRegistryDuck<Block>) Registry.BLOCK).getDelegateOrThrow(block));
         if (found != null && pred.test(found)) return found;
 
         for (ICCBlockRenderer renderer : globalRenderers) {
@@ -106,7 +111,8 @@ public class BlockRenderingRegistry {
 
     @Nullable
     static ICCBlockRenderer findFor(Fluid fluid, Predicate<ICCBlockRenderer> pred) {
-        ICCBlockRenderer found = fluidRenderers.get(Registry.FLUID.getDelegateOrThrow(fluid));
+        @SuppressWarnings("unchecked")
+        ICCBlockRenderer found = fluidRenderers.get(((MappedRegistryDuck<Fluid>) Registry.FLUID).getDelegateOrThrow(fluid));
         if (found != null && pred.test(found)) return found;
 
         for (ICCBlockRenderer renderer : globalRenderers) {

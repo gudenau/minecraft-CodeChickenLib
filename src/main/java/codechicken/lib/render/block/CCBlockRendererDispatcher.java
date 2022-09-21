@@ -1,10 +1,9 @@
 package codechicken.lib.render.block;
 
-import codechicken.lib.capability.fabric.client.BlockRenderDispatcherDuck;
+import codechicken.lib.internal.duck.client.BlockRenderDispatcherDuck;
 import codechicken.lib.internal.ExceptionMessageEventHandler;
 import codechicken.lib.internal.mixin.accessor.client.BlockRenderDispatcherAccessor;
 import codechicken.lib.internal.proxy.ProxyClient;
-import codechicken.lib.render.ModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.CrashReport;
@@ -13,7 +12,6 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;

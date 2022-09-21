@@ -1,7 +1,7 @@
 package codechicken.lib.util;
 
-import codechicken.lib.capability.fabric.MatrixHelper;
-import codechicken.lib.capability.fabric.TransformationDuck;
+import codechicken.lib.internal.duck.MatrixHelper;
+import codechicken.lib.internal.duck.TransformationDuck;
 import codechicken.lib.model.PerspectiveModelState;
 import codechicken.lib.vec.Vector3;
 import com.google.common.collect.ImmutableMap;

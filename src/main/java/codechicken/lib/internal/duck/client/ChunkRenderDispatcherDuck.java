@@ -1,4 +1,4 @@
-package codechicken.lib.capability.fabric.client;
+package codechicken.lib.internal.duck.client;
 
 import codechicken.lib.render.ModelData;
 import net.minecraft.core.BlockPos;

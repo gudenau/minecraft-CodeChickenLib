@@ -79,3 +79,5 @@ accessible field net/minecraft/client/renderer/RenderStateShard COLOR_WRITE Lnet
 accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_TEX_LIGHTMAP_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 accessible field net/minecraft/client/renderer/RenderStateShard BLOCK_SHEET Lnet/minecraft/client/renderer/RenderStateShard$TextureStateShard;
 accessible field net/minecraft/client/renderer/RenderStateShard LIGHTMAP Lnet/minecraft/client/renderer/RenderStateShard$LightmapStateShard;
+
+accessible class net/minecraft/server/players/GameProfileCache$GameProfileInfo

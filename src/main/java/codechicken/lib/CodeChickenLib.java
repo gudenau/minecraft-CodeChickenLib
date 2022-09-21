@@ -6,6 +6,7 @@ import codechicken.lib.internal.command.CCLCommands;
 import codechicken.lib.internal.network.CCLNetwork;
 import codechicken.lib.internal.proxy.Proxy;
 import codechicken.lib.internal.proxy.ProxyClient;
+import codechicken.lib.util.ServerUtils;
 import net.fabricmc.api.*;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -35,6 +36,7 @@ public class CodeChickenLib implements ModInitializer, ClientModInitializer, Ded
             (Supplier<Supplier<Proxy>>)() -> Proxy::new
         ).get().get();
         CCLCommands.init();
+        ServerUtils.init();
     }
     
     @Override
