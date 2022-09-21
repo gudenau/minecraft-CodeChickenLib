@@ -4,11 +4,13 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,22 +24,22 @@ import java.util.stream.Collectors;
 public enum EnumColour implements StringRepresentable {
 
     //@formatter:off
-    WHITE     ("white",      "forge:dyes/white",      "forge:wool/white",      "item.minecraft.firework_star.white",       0xFFFFFF),
-    ORANGE    ("orange",     "forge:dyes/orange",     "forge:wool/orange",     "item.minecraft.firework_star.orange",      0xC06300),
-    MAGENTA   ("magenta",    "forge:dyes/magenta",    "forge:wool/magenta",    "item.minecraft.firework_star.magenta",     0xB51AB5),
-    LIGHT_BLUE("light_blue", "forge:dyes/light_blue", "forge:wool/light_blue", "item.minecraft.firework_star.light_blue",  0x6F84F1),
-    YELLOW    ("yellow",     "forge:dyes/yellow",     "forge:wool/yellow",     "item.minecraft.firework_star.yellow",      0xBFBF00),
-    LIME      ("lime",       "forge:dyes/lime",       "forge:wool/lime",       "item.minecraft.firework_star.lime",        0x6BF100),
-    PINK      ("pink",       "forge:dyes/pink",       "forge:wool/pink",       "item.minecraft.firework_star.pink",        0xF14675),
-    GRAY      ("gray",       "forge:dyes/gray",       "forge:wool/gray",       "item.minecraft.firework_star.gray",        0x535353),
-    LIGHT_GRAY("light_gray", "forge:dyes/light_gray", "forge:wool/light_gray", "item.minecraft.firework_star.light_gray",  0x939393),
-    CYAN      ("cyan",       "forge:dyes/cyan",       "forge:wool/cyan",       "item.minecraft.firework_star.cyan",        0x008787),
-    PURPLE    ("purple",     "forge:dyes/purple",     "forge:wool/purple",     "item.minecraft.firework_star.purple",      0x5E00C0),
-    BLUE      ("blue",       "forge:dyes/blue",       "forge:wool/blue",       "item.minecraft.firework_star.blue",        0x1313C0),
-    BROWN     ("brown",      "forge:dyes/brown",      "forge:wool/brown",      "item.minecraft.firework_star.brown",       0x4F2700),
-    GREEN     ("green",      "forge:dyes/green",      "forge:wool/green",      "item.minecraft.firework_star.green",       0x088700),
-    RED       ("red",        "forge:dyes/red",        "forge:wool/red",        "item.minecraft.firework_star.red",         0xA20F06),
-    BLACK     ("black",      "forge:dyes/black",      "forge:wool/black",      "item.minecraft.firework_star.black",       0x1F1F1F);
+    WHITE     ("white",      "c:dyes/white",      "c:wool/white",      "item.minecraft.firework_star.white",       0xFFFFFF),
+    ORANGE    ("orange",     "c:dyes/orange",     "c:wool/orange",     "item.minecraft.firework_star.orange",      0xC06300),
+    MAGENTA   ("magenta",    "c:dyes/magenta",    "c:wool/magenta",    "item.minecraft.firework_star.magenta",     0xB51AB5),
+    LIGHT_BLUE("light_blue", "c:dyes/light_blue", "c:wool/light_blue", "item.minecraft.firework_star.light_blue",  0x6F84F1),
+    YELLOW    ("yellow",     "c:dyes/yellow",     "c:wool/yellow",     "item.minecraft.firework_star.yellow",      0xBFBF00),
+    LIME      ("lime",       "c:dyes/lime",       "c:wool/lime",       "item.minecraft.firework_star.lime",        0x6BF100),
+    PINK      ("pink",       "c:dyes/pink",       "c:wool/pink",       "item.minecraft.firework_star.pink",        0xF14675),
+    GRAY      ("gray",       "c:dyes/gray",       "c:wool/gray",       "item.minecraft.firework_star.gray",        0x535353),
+    LIGHT_GRAY("light_gray", "c:dyes/light_gray", "c:wool/light_gray", "item.minecraft.firework_star.light_gray",  0x939393),
+    CYAN      ("cyan",       "c:dyes/cyan",       "c:wool/cyan",       "item.minecraft.firework_star.cyan",        0x008787),
+    PURPLE    ("purple",     "c:dyes/purple",     "c:wool/purple",     "item.minecraft.firework_star.purple",      0x5E00C0),
+    BLUE      ("blue",       "c:dyes/blue",       "c:wool/blue",       "item.minecraft.firework_star.blue",        0x1313C0),
+    BROWN     ("brown",      "c:dyes/brown",      "c:wool/brown",      "item.minecraft.firework_star.brown",       0x4F2700),
+    GREEN     ("green",      "c:dyes/green",      "c:wool/green",      "item.minecraft.firework_star.green",       0x088700),
+    RED       ("red",        "c:dyes/red",        "c:wool/red",        "item.minecraft.firework_star.red",         0xA20F06),
+    BLACK     ("black",      "c:dyes/black",      "c:wool/black",      "item.minecraft.firework_star.black",       0x1F1F1F);
     //@formatter:on
 
     private final String name;
@@ -53,9 +55,13 @@ public enum EnumColour implements StringRepresentable {
 
     private static final Map<ResourceLocation, EnumColour> dyeTagLookup = Arrays.stream(values())//
             .collect(Collectors.toMap(e -> e.dyeTagName, Function.identity()));
+    private static final Map<TagKey<Item>, EnumColour> dyeTags = dyeTagLookup.entrySet().stream()
+            .collect(Collectors.toUnmodifiableMap((e) -> TagKey.create(Registry.ITEM_REGISTRY, e.getKey()), Map.Entry::getValue));
 
     private static final Map<ResourceLocation, EnumColour> woolTagLookup = Arrays.stream(values())//
             .collect(Collectors.toMap(e -> e.woolTagName, Function.identity()));
+    private static final Map<TagKey<Item>, EnumColour> woolTags = woolTagLookup.entrySet().stream()
+            .collect(Collectors.toUnmodifiableMap((e) -> TagKey.create(Registry.ITEM_REGISTRY, e.getKey()), Map.Entry::getValue));
 
     static {
         Table<EnumColour, EnumColour, EnumColour> tmp = HashBasedTable.create();
@@ -191,25 +197,27 @@ public enum EnumColour implements StringRepresentable {
     }
 
     public static EnumColour fromDyeStack(ItemStack stack) {
-        return ForgeRegistries.ITEMS.getHolder(stack.getItem())
-                .flatMap(e -> e.getTagKeys()
-                        .map(TagKey::location)
-                        .map(dyeTagLookup::get)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                )
-                .orElse(null);
+        if (stack.isEmpty()) {
+            return null;
+        }
+
+        return dyeTags.entrySet().stream()
+            .filter((e) -> stack.is(e.getKey()))
+            .map(Map.Entry::getValue)
+            .findFirst()
+            .orElse(null);
     }
 
     public static EnumColour fromWoolStack(ItemStack stack) {
-        return ForgeRegistries.ITEMS.getHolder(stack.getItem())
-                .flatMap(e -> e.getTagKeys()
-                        .map(TagKey::location)
-                        .map(woolTagLookup::get)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                )
-                .orElse(null);
+        if (stack.isEmpty()) {
+            return null;
+        }
+    
+        return woolTags.entrySet().stream()
+            .filter((e) -> stack.is(e.getKey()))
+            .map(Map.Entry::getValue)
+            .findFirst()
+            .orElse(null);
     }
 
     public static EnumColour fromName(String name) {

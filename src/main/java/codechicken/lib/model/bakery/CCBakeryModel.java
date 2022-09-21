@@ -6,6 +6,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -16,9 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.model.data.ModelData;
+import codechicken.lib.render.ModelData;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +39,7 @@ public class CCBakeryModel implements BakedModel, IModelParticleProvider {
         return getQuads(state, side, rand, ModelData.EMPTY, null);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData modelData, RenderType layer) {
         return ModelBakery.getCachedModel(state, modelData).getQuads(state, side, rand, modelData, layer);
@@ -67,9 +69,14 @@ public class CCBakeryModel implements BakedModel, IModelParticleProvider {
     public TextureAtlasSprite getParticleIcon() {
         return TextureUtils.getMissingSprite();
     }
-
+    
     @Override
-    public Set<TextureAtlasSprite> getHitEffects(BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData data) {
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
+    }
+    
+    @Override
+    public Set<TextureAtlasSprite> getHitEffects(@NotNull BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData data) {
         BakedModel model = ModelBakery.getCachedModel(state, data);
         if (model instanceof IModelParticleProvider) {
             return ((IModelParticleProvider) model).getHitEffects(traceResult, state, world, pos, data);

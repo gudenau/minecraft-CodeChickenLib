@@ -1,5 +1,6 @@
 package codechicken.lib.vec;
 
+import codechicken.lib.internal.mixin.accessor.Vector4fAccessor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
@@ -514,11 +515,13 @@ public class Matrix4 extends Transformation {
     }
 
     public Matrix4f toMatrix4f() {
-        return new Matrix4f(toArrayF());
+        var matrix = new Matrix4f();
+        matrix.load(FloatBuffer.wrap(toArrayF()));
+        return matrix;
     }
 
     public static Vector3 gluProject(Vector3 obj, Matrix4 modelMatrix, Matrix4 projMatrix, IntBuffer viewport) {
-        Vector4f o = new Vector4f((float) obj.x, (float) obj.y, (float) obj.z, 1.0F);
+        var o = (Vector4f & Vector4fAccessor) new Vector4f((float) obj.x, (float) obj.y, (float) obj.z, 1.0F);
         modelMatrix.multMatrix(o);
         projMatrix.multMatrix(o);
 

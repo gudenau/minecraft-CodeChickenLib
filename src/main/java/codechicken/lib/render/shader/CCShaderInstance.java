@@ -1,5 +1,8 @@
 package codechicken.lib.render.shader;
 
+import codechicken.lib.internal.mixin.accessor.client.Program$TypeAccessor;
+import codechicken.lib.internal.mixin.accessor.client.ProgramAccessor;
+import codechicken.lib.internal.mixin.accessor.client.ShaderInstanceAccessor;
 import codechicken.lib.render.shader.GlslProcessor.ProcessedShader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,7 +36,7 @@ public class CCShaderInstance extends ShaderInstance {
     private final List<Runnable> applyCallbacks = new LinkedList<>();
 
     protected CCShaderInstance(ResourceProvider resourceProvider, ResourceLocation loc, VertexFormat format) throws IOException {
-        super(resourceProvider, loc, format);
+        super(resourceProvider, loc.toString(), format);
     }
 
     public static CCShaderInstance create(ResourceProvider resourceProvider, ResourceLocation loc, VertexFormat format) {
@@ -90,7 +93,7 @@ public class CCShaderInstance extends ShaderInstance {
             case FLOAT, MATRIX -> uniform.glUniformF(false, parseFloats(count, jsonValues));
             case DOUBLE, D_MATRIX -> uniform.glUniformD(false, parseDoubles(count, jsonValues));
         }
-        uniforms.add(uniform);
+        ((ShaderInstanceAccessor) this).getUniforms().add(uniform);
     }
 
     public Program compileProgram(ResourceProvider resourceProvider, Program.Type programType, ResourceLocation loc) throws IOException {
@@ -101,14 +104,15 @@ public class CCShaderInstance extends ShaderInstance {
 
         ProcessedShader processedShader = new GlslProcessor(resourceProvider, adjustedLoc).process();
 
-        int id = GL20.glCreateShader(programType.getGlType());
+        //FIXME The stupid cast shouldn't be needed
+        int id = GL20.glCreateShader(((Program$TypeAccessor)(Object) programType).invokeGetGlType());
         GL20.glShaderSource(id, processedShader.processedSource());
         GL20.glCompileShader(id);
         if (GL20.glGetShaderi(id, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
             String s1 = GL20.glGetShaderInfoLog(id);
             throw new IOException("Couldn't compile " + programType.getName() + " program (" + processedShader.sourceName() + ", " + adjustedLoc + ") : " + s1);
         }
-        program = new Program(programType, id, cacheString);
+        program = ProgramAccessor.init(programType, id, cacheString);
         programType.getPrograms().put(cacheString, program);
         return program;
     }

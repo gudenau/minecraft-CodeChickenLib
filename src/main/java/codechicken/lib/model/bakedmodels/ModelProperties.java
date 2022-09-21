@@ -8,7 +8,7 @@ import codechicken.lib.util.TransformUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by covers1624 on 19/11/2016.

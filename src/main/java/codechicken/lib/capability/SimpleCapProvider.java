@@ -5,8 +5,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by covers1624 on 17/5/20.
@@ -23,9 +23,9 @@ public class SimpleCapProvider<T> implements ICapabilityProvider {
         instanceOpt = LazyOptional.of(() -> this.instance);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public <R> LazyOptional<R> getCapability(@Nonnull Capability<R> cap, @Nullable Direction side) {
+    public <R> LazyOptional<R> getCapability(@NotNull Capability<R> cap, @Nullable Direction side) {
         if (capability == cap) {
             return instanceOpt.cast();
         }

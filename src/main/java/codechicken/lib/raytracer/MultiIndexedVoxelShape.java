@@ -1,5 +1,6 @@
 package codechicken.lib.raytracer;
 
+import codechicken.lib.internal.mixin.accessor.client.VoxelShapeAccessor;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import net.minecraft.core.BlockPos;
@@ -7,7 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static net.covers1624.quack.util.SneakyUtils.unsafeCast;
 
@@ -42,14 +43,14 @@ public class MultiIndexedVoxelShape extends VoxelShape {
      * @param shapes The sub-components.
      */
     public MultiIndexedVoxelShape(VoxelShape merged, ImmutableSet<IndexedVoxelShape> shapes) {
-        super(merged.shape);
+        super(((VoxelShapeAccessor) merged).getShape());
         this.merged = merged;
         this.shapes = shapes;
     }
 
     @Override
     public DoubleList getCoords(Direction.Axis axis) {
-        return merged.getCoords(axis);
+        return ((VoxelShapeAccessor) merged).invokeGetCoords(axis);
     }
 
     @Nullable

@@ -5,6 +5,8 @@ import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.raytracer.VoxelShapeBlockHitResult;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleEngine;
@@ -22,9 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.ModelData;
+import codechicken.lib.render.ModelData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class CustomParticleHandler {
         return true;
     }
 
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static boolean handleRunningEffects(Level world, BlockPos pos, BlockState state, Entity entity) {
         //Spoof a raytrace from the feet.
         BlockHitResult traceResult = new BlockHitResult(entity.position().add(0, 1, 0), Direction.UP, pos, false);
@@ -89,7 +89,7 @@ public class CustomParticleHandler {
      * @param manager     The ParticleManager.
      * @return True if particles were added, basically just return the result of this method inside {@link Block#addLandingEffects}
      */
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static boolean handleHitEffects(BlockState state, Level world, HitResult traceResult, ParticleEngine manager) {
         if (traceResult instanceof BlockHitResult hit) {
             BlockPos pos = hit.getBlockPos();
@@ -123,7 +123,7 @@ public class CustomParticleHandler {
      * @param manager The ParticleManager.
      * @return True if particles were added, basically just return the result of this method inside {@link Block#addHitEffects}
      */
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static boolean handleDestroyEffects(Level world, BlockPos pos, BlockState state, ParticleEngine manager) {
         BlockModelShaper modelShapes = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
         BakedModel model = modelShapes.getBlockModel(state);
@@ -136,7 +136,7 @@ public class CustomParticleHandler {
         return false;
     }
 
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void addLandingEffects(Level world, BlockPos pos, BlockState state, Vector3 entityPos, int numParticles) {
         //Spoof a raytrace from the feet.
         BlockHitResult traceResult = new BlockHitResult(new Vec3(entityPos.x, pos.getY() + 1, entityPos.z), Direction.UP, pos, false);
@@ -160,7 +160,7 @@ public class CustomParticleHandler {
         }
     }
 
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void addBlockHitEffects(Level world, Cuboid6 bounds, Direction side, TextureAtlasSprite icon, ParticleEngine particleManager) {
         float border = 0.1F;
         Vector3 diff = bounds.max.copy().subtract(bounds.min).add(-2 * border);
@@ -191,7 +191,7 @@ public class CustomParticleHandler {
         particleManager.add(new CustomBreakingParticle((ClientLevel) world, pos.x, pos.y, pos.z, 0, 0, 0, icon).setPower(0.2F).scale(0.6F));
     }
 
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void addBlockDestroyEffects(Level world, Cuboid6 bounds, List<TextureAtlasSprite> icons, ParticleEngine particleManager) {
         Vector3 diff = bounds.max.copy().subtract(bounds.min);
         Vector3 center = bounds.min.copy().add(bounds.max).multiply(0.5);

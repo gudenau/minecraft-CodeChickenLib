@@ -18,6 +18,7 @@
 
 package codechicken.lib.model.pipeline.transformers;
 
+import codechicken.lib.internal.mixin.accessor.DirectionAccessor;
 import codechicken.lib.model.Quad.Vertex;
 import codechicken.lib.model.pipeline.IPipelineElementFactory;
 import codechicken.lib.model.pipeline.QuadTransformer;
@@ -123,7 +124,7 @@ public class QuadCornerKicker extends QuadTransformer {
                             float y = vertex.vec[1];
                             float z = vertex.vec[2];
                             if (epsComp(x, corner.pX(box)) && epsComp(y, corner.pY(box)) && epsComp(z, corner.pZ(box))) {
-                                Vec3i vec = Direction.BY_3D_DATA[hoz].getNormal();
+                                Vec3i vec = DirectionAccessor.getBy3dData()[hoz].getNormal();
                                 x -= vec.getX() * thickness;
                                 y -= vec.getY() * thickness;
                                 z -= vec.getZ() * thickness;

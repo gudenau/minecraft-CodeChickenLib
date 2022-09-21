@@ -1,5 +1,6 @@
 package codechicken.lib.model.bakedmodels;
 
+import codechicken.lib.internal.mixin.accessor.client.ItemRendererAccessor;
 import codechicken.lib.util.TransformUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -23,7 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -108,6 +109,6 @@ public abstract class WrappedItemModel implements BakedModel {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         RenderType rType = ItemBlockRenderTypes.getRenderType(stack, fabulous);
         VertexConsumer builder = ItemRenderer.getFoilBuffer(buffers, rType, true, stack.hasFoil());
-        itemRenderer.renderModelLists(model, stack, packedLight, packedOverlay, pStack, consOverride.apply(builder));
+        ((ItemRendererAccessor) itemRenderer).invokeRenderModelLists(model, stack, packedLight, packedOverlay, pStack, consOverride.apply(builder));
     }
 }

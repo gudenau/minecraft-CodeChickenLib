@@ -27,7 +27,7 @@ public interface IItemBakery extends IBakery {
      * @param stack The stack!
      * @return The quads.
      */
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     List<BakedQuad> bakeItemQuads(@Nullable Direction face, ItemStack stack);
 
     /**
@@ -35,7 +35,7 @@ public interface IItemBakery extends IBakery {
      *
      * @return The {@link PerspectiveProperties} to use.
      */
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     default PerspectiveProperties getModelProperties(ItemStack stack) {
         return stack.getItem() instanceof BlockItem ? PerspectiveProperties.DEFAULT_BLOCK : PerspectiveProperties.DEFAULT_ITEM;
     }

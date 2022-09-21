@@ -5,7 +5,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
@@ -62,18 +62,18 @@ public class InventoryCopy implements Container {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack getItem(int slot) {
         return items[slot];
     }
 
-    @Nonnull
+    @NotNull
     public ItemStack removeItem(int slot, int amount) {
         return InventoryUtils.decrStackSize(this, slot, amount);
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack removeItemNoUpdate(int slot) {
         return InventoryUtils.removeStackFromSlot(this, slot);
     }

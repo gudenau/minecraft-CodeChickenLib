@@ -1,15 +1,17 @@
 package codechicken.lib.render.block;
 
+import codechicken.lib.internal.mixin.accessor.client.MinecraftAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.Registry;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,12 +33,12 @@ public class BlockRenderingRegistry {
     private static final Map<Holder<Fluid>, ICCBlockRenderer> fluidRenderers = new HashMap<>();
     private static final List<ICCBlockRenderer> globalRenderers = new ArrayList<>();
 
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void init() {
         if (!initialized) {
-            Minecraft mc = Minecraft.getInstance();
+            var mc = (Minecraft & MinecraftAccessor) Minecraft.getInstance();
             BlockRenderDispatcher parentDispatcher = mc.getBlockRenderer();
-            mc.blockRenderer = new CCBlockRendererDispatcher(parentDispatcher, mc.getBlockColors());
+            mc.setBlockRenderer(new CCBlockRendererDispatcher(parentDispatcher, mc.getBlockColors()));
             initialized = true;
         }
     }
@@ -52,10 +54,10 @@ public class BlockRenderingRegistry {
      * @throws IllegalArgumentException If the same Block is registered twice.
      */
     public static synchronized void registerRenderer(Block block, ICCBlockRenderer renderer) {
-        Holder<Block> delegate = ForgeRegistries.BLOCKS.getDelegateOrThrow(block);
-        ICCBlockRenderer prev = blockRenderers.get(ForgeRegistries.BLOCKS.getDelegateOrThrow(block));
+        Holder<Block> delegate = Registry.BLOCK.getDelegateOrThrow(block);
+        ICCBlockRenderer prev = blockRenderers.get(Registry.BLOCK.getDelegateOrThrow(block));
         if (prev != null) {
-            throw new IllegalArgumentException("Renderer already registered for block. " + ForgeRegistries.BLOCKS.getKey(block));
+            throw new IllegalArgumentException("Renderer already registered for block. " + Registry.BLOCK.getKey(block));
         }
         blockRenderers.put(delegate, renderer);
     }
@@ -71,10 +73,10 @@ public class BlockRenderingRegistry {
      * @throws IllegalArgumentException If the same Fluid is registered twice.
      */
     public static synchronized void registerRenderer(Fluid fluid, ICCBlockRenderer renderer) {
-        Holder<Fluid> delegate = ForgeRegistries.FLUIDS.getDelegateOrThrow(fluid);
+        Holder<Fluid> delegate = Registry.FLUID.getDelegateOrThrow(fluid);
         ICCBlockRenderer prev = blockRenderers.get(delegate);
         if (prev != null) {
-            throw new IllegalArgumentException("Renderer already registered for fluid. " + ForgeRegistries.FLUIDS.getKey(fluid));
+            throw new IllegalArgumentException("Renderer already registered for fluid. " + Registry.FLUID.getKey(fluid));
         }
         fluidRenderers.put(delegate, renderer);
     }
@@ -91,7 +93,7 @@ public class BlockRenderingRegistry {
 
     @Nullable
     static ICCBlockRenderer findFor(Block block, Predicate<ICCBlockRenderer> pred) {
-        ICCBlockRenderer found = blockRenderers.get(ForgeRegistries.BLOCKS.getDelegateOrThrow(block));
+        ICCBlockRenderer found = blockRenderers.get(Registry.BLOCK.getDelegateOrThrow(block));
         if (found != null && pred.test(found)) return found;
 
         for (ICCBlockRenderer renderer : globalRenderers) {
@@ -104,7 +106,7 @@ public class BlockRenderingRegistry {
 
     @Nullable
     static ICCBlockRenderer findFor(Fluid fluid, Predicate<ICCBlockRenderer> pred) {
-        ICCBlockRenderer found = fluidRenderers.get(ForgeRegistries.FLUIDS.getDelegateOrThrow(fluid));
+        ICCBlockRenderer found = fluidRenderers.get(Registry.FLUID.getDelegateOrThrow(fluid));
         if (found != null && pred.test(found)) return found;
 
         for (ICCBlockRenderer renderer : globalRenderers) {

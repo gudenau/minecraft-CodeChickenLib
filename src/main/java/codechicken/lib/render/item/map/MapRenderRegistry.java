@@ -31,6 +31,8 @@ public class MapRenderRegistry {
         mapRenderers.put(item, mapRenderer);
     }
 
+    public static void init() {}
+    
     //    @SubscribeEvent
     //    public void onItemFrameRender(RenderItemInFrameEvent event) {
     //        if (shouldHandle(event.getItem(), true)) {

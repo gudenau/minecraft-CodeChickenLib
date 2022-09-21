@@ -1,5 +1,6 @@
 package codechicken.lib.model.bakery;
 
+import codechicken.lib.internal.mixin.accessor.DirectionAccessor;
 import codechicken.lib.model.bakedmodels.ModelProperties;
 import codechicken.lib.model.bakedmodels.ModelProperties.PerspectiveProperties;
 import codechicken.lib.model.bakedmodels.PerspectiveAwareBakedModel;
@@ -25,9 +26,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.model.data.ModelData;
+import codechicken.lib.render.ModelData;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +40,7 @@ import java.util.function.Function;
 /**
  * Created by covers1624 on 25/10/2016.
  */
-@OnlyIn (Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ModelBakery {
 
     private static final Logger logger = LogManager.getLogger();
@@ -64,7 +65,7 @@ public class ModelBakery {
 
     public static final IBlockStateKeyGenerator defaultBlockKeyGenerator = (state, data) -> state.toString();
 
-    public static final IItemStackKeyGenerator defaultItemKeyGenerator = stack -> ForgeRegistries.ITEMS.getKey(stack.getItem()).toString() + "|" + stack.getDamageValue();
+    public static final IItemStackKeyGenerator defaultItemKeyGenerator = stack -> Registry.ITEM.getKey(stack.getItem()).toString() + "|" + stack.getDamageValue();
 
     public static void init() {
         ResourceUtils.registerReloadListener(e -> nukeModelCache());
@@ -91,7 +92,7 @@ public class ModelBakery {
 
     public static void registerBlockKeyGenerator(Block block, IBlockStateKeyGenerator generator) {
         if (blockKeyGeneratorMap.containsKey(block)) {
-            throw new IllegalArgumentException("Unable to register IBlockStateKeyGenerator as one is already registered for block:" + ForgeRegistries.BLOCKS.getKey(block));
+            throw new IllegalArgumentException("Unable to register IBlockStateKeyGenerator as one is already registered for block:" + Registry.BLOCK.getKey(block));
         }
         blockKeyGeneratorMap.put(block, generator);
     }
@@ -132,7 +133,7 @@ public class ModelBakery {
             List<BakedQuad> unculledQuads = List.copyOf(bakery.bakeItemQuads(null, stack));
 
             Map<Direction, List<BakedQuad>> faceQuads = new HashMap<>();
-            for (Direction face : Direction.BY_3D_DATA) {
+            for (Direction face : DirectionAccessor.getBy3dData()) {
                 faceQuads.put(face, List.copyOf(bakery.bakeItemQuads(face, stack)));
             }
 
@@ -175,7 +176,7 @@ public class ModelBakery {
                 unculledQuads.put(layer, List.copyOf(bakery.bakeFace(null, layer, state, data)));
 
                 Map<Direction, List<BakedQuad>> faceQuadMap = new HashMap<>();
-                for (Direction face : Direction.BY_3D_DATA) {
+                for (Direction face : DirectionAccessor.getBy3dData()) {
                     faceQuadMap.put(face, List.copyOf(bakery.bakeFace(face, layer, state, data)));
                 }
                 culledQuads.put(layer, faceQuadMap);

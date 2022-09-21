@@ -6,22 +6,18 @@ import codechicken.lib.internal.command.CCLCommands;
 import codechicken.lib.internal.network.CCLNetwork;
 import codechicken.lib.internal.proxy.Proxy;
 import codechicken.lib.internal.proxy.ProxyClient;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.fabricmc.api.*;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 /**
  * Created by covers1624 on 12/10/2016.
  */
-@Mod (CodeChickenLib.MOD_ID)
-public class CodeChickenLib {
+@EnvironmentInterface(value = EnvType.CLIENT, itf = ClientModInitializer.class)
+@EnvironmentInterface(value = EnvType.SERVER, itf = DedicatedServerModInitializer.class)
+public class CodeChickenLib implements ModInitializer, ClientModInitializer, DedicatedServerModInitializer {
 
     public static final String MOD_ID = "codechickenlib";
 
@@ -33,24 +29,29 @@ public class CodeChickenLib {
         config = new ConfigFile(MOD_ID)
                 .path(Paths.get("config/ccl.cfg"))
                 .load();
-        proxy = DistExecutor.safeRunForDist(() -> ProxyClient::new, () -> Proxy::new);
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
+        
+        proxy = (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT ?
+            (Supplier<Supplier<Proxy>>)() -> ProxyClient::new :
+            (Supplier<Supplier<Proxy>>)() -> Proxy::new
+        ).get().get();
         CCLCommands.init();
     }
-
-    @SubscribeEvent
-    public void onCommonSetup(FMLCommonSetupEvent event) {
-        proxy.commonSetup(event);
+    
+    @Override
+    public void onInitialize() {
+        proxy.commonSetup();
         CCLNetwork.init();
     }
-
-    @SubscribeEvent
-    public void onClientSetup(FMLClientSetupEvent event) {
-        proxy.clientSetup(event);
+    
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void onInitializeClient() {
+        proxy.clientSetup();
     }
-
-    @SubscribeEvent
-    public void onServerSetup(FMLDedicatedServerSetupEvent event) {
-        proxy.serverSetup(event);
+    
+    @Environment(EnvType.SERVER)
+    @Override
+    public void onInitializeServer() {
+        proxy.serverSetup();
     }
 }

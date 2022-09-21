@@ -1,13 +1,13 @@
 package codechicken.lib.raytracer;
 
+import codechicken.lib.internal.mixin.accessor.client.VoxelShapeAccessor;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A VoxelShape implementation, produces a {@link VoxelShapeBlockHitResult} when ray traced.
@@ -22,14 +22,14 @@ public class IndexedVoxelShape extends VoxelShape {
     private final Object data;
 
     public IndexedVoxelShape(VoxelShape parent, Object data) {
-        super(parent.shape);
+        super(((VoxelShapeAccessor) parent).getShape());
         this.parent = parent;
         this.data = data;
     }
 
     @Override
     public DoubleList getCoords(Direction.Axis axis) {
-        return parent.getCoords(axis);
+        return ((VoxelShapeAccessor) parent).invokeGetCoords(axis);
     }
 
     @Nullable

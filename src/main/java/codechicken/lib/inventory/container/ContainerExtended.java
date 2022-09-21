@@ -9,7 +9,7 @@ import net.minecraft.inventory.container.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +24,7 @@ public abstract class ContainerExtended extends Container implements IContainerL
     }
 
     @Override
-    public void addSlotListener(@Nonnull IContainerListener listener) {
+    public void addSlotListener(@NotNull IContainerListener listener) {
         if (listener instanceof ServerPlayerEntity) {
             playerCrafters.add((ServerPlayerEntity) listener);
             sendContainerAndContentsToPlayer(this, getItems(), Collections.singletonList((ServerPlayerEntity) listener));
@@ -35,7 +35,7 @@ public abstract class ContainerExtended extends Container implements IContainerL
     }
 
     @Override
-    public void removeSlotListener(@Nonnull IContainerListener listener) {
+    public void removeSlotListener(@NotNull IContainerListener listener) {
         if (listener instanceof ServerPlayerEntity) {
             playerCrafters.remove(listener);
         } else {
@@ -44,7 +44,7 @@ public abstract class ContainerExtended extends Container implements IContainerL
     }
 
     @Override
-    public void refreshContainer(@Nonnull Container container, @Nonnull NonNullList<ItemStack> list) {
+    public void refreshContainer(@NotNull Container container, @NotNull NonNullList<ItemStack> list) {
         sendContainerAndContentsToPlayer(container, list, playerCrafters);
     }
 
@@ -76,14 +76,14 @@ public abstract class ContainerExtended extends Container implements IContainerL
     }
 
     @Override
-    public void setContainerData(@Nonnull Container container, int i, int j) {
+    public void setContainerData(@NotNull Container container, int i, int j) {
         for (ServerPlayerEntity player : playerCrafters) {
             player.setContainerData(container, i, j);
         }
     }
 
     @Override
-    public void slotChanged(@Nonnull Container container, int slot, @Nonnull ItemStack stack) {
+    public void slotChanged(@NotNull Container container, int slot, @NotNull ItemStack stack) {
         if (!stack.isEmpty() && stack.getCount() > Byte.MAX_VALUE) {
             sendLargeStack(stack, slot, playerCrafters);
         } else {
@@ -93,9 +93,9 @@ public abstract class ContainerExtended extends Container implements IContainerL
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack clicked(int slot, int dragType, @Nonnull ClickType clickType, @Nonnull PlayerEntity player) {
+    public ItemStack clicked(int slot, int dragType, @NotNull ClickType clickType, @NotNull PlayerEntity player) {
         if (slot >= 0 && slot < slots.size()) {
             Slot actualSlot = getSlot(slot);
             if (actualSlot instanceof SlotHandleClicks) {
@@ -105,9 +105,9 @@ public abstract class ContainerExtended extends Container implements IContainerL
         return super.clicked(slot, dragType, clickType, player);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack quickMoveStack(@Nonnull PlayerEntity par1EntityPlayer, int slotIndex) {
+    public ItemStack quickMoveStack(@NotNull PlayerEntity par1EntityPlayer, int slotIndex) {
         ItemStack transferredStack = ItemStack.EMPTY;
         Slot slot = slots.get(slotIndex);
 
@@ -130,7 +130,7 @@ public abstract class ContainerExtended extends Container implements IContainerL
     }
 
     @Override
-    public boolean moveItemStackTo(@Nonnull ItemStack stack, int startIndex, int endIndex, boolean reverse) {
+    public boolean moveItemStackTo(@NotNull ItemStack stack, int startIndex, int endIndex, boolean reverse) {
         boolean merged = false;
         int slotIndex = reverse ? endIndex - 1 : startIndex;
 
@@ -206,7 +206,7 @@ public abstract class ContainerExtended extends Container implements IContainerL
     }
 
     @Override
-    public boolean stillValid(@Nonnull PlayerEntity var1) {
+    public boolean stillValid(@NotNull PlayerEntity var1) {
         return true;
     }
 

@@ -8,6 +8,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
@@ -20,13 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryManager;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -34,8 +30,6 @@ import java.io.InputStream;
 import java.nio.*;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-
-import static net.covers1624.quack.util.SneakyUtils.unsafeCast;
 
 /**
  * Provides the ability to read various datas from some sort of data stream.
@@ -610,7 +604,7 @@ public interface MCDataInput {
         if (!readBoolean()) {
             return ItemStack.EMPTY;
         } else {
-            Item item = readRegistryIdDirect(ForgeRegistries.ITEMS);
+            Item item = readRegistryIdDirect(Registry.ITEM);
             int count = readVarInt();
             ItemStack stack = new ItemStack(item, count);
             stack.readShareTag(readCompoundNBT());
@@ -623,11 +617,12 @@ public interface MCDataInput {
      *
      * @return The {@link FluidStack}.
      */
+    /*TODO
     default FluidStack readFluidStack() {
         if (!readBoolean()) {
             return FluidStack.EMPTY;
         } else {
-            Fluid fluid = readRegistryIdDirect(ForgeRegistries.FLUIDS);
+            Fluid fluid = readRegistryIdDirect(Registry.FLUID);
             int amount = readVarInt();
             CompoundTag tag = readCompoundNBT();
             if (fluid == Fluids.EMPTY) {
@@ -636,6 +631,7 @@ public interface MCDataInput {
             return new FluidStack(fluid, amount, tag);
         }
     }
+     */
 
     /**
      * Reads an {@link Component} from the stream.
@@ -654,9 +650,8 @@ public interface MCDataInput {
      * @see MCDataOutput#writeRegistryIdDirect(IForgeRegistry, Object)
      * @see MCDataOutput#writeRegistryIdDirect(IForgeRegistry, ResourceLocation)
      */
-    default <T> T readRegistryIdDirect(IForgeRegistry<T> registry) {
-        ForgeRegistry<T> _registry = unsafeCast(registry);
-        return _registry.getValue(readVarInt());
+    default <T> T readRegistryIdDirect(Registry<T> registry) {
+        return registry.byId(readVarInt());
     }
 
     /**
@@ -668,7 +663,7 @@ public interface MCDataInput {
      */
     default <T> T readRegistryId() {
         ResourceLocation rName = readResourceLocation();
-        ForgeRegistry<T> registry = RegistryManager.ACTIVE.getRegistry(rName);
+        @SuppressWarnings("unchecked") Registry<T> registry = (Registry<T>) Registry.REGISTRY.get(rName);
         return readRegistryIdDirect(registry);
     }
     //endregion

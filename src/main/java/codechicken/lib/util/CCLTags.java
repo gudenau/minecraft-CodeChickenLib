@@ -1,8 +1,7 @@
 package codechicken.lib.util;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +32,7 @@ public class CCLTags {
         public static TagKey<Block> WOOL_BLACK = forge("wool/black");
 
         private static TagKey<Block> forge(String path) {
-            return BlockTags.create(new ResourceLocation("forge", path));
+            return TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("forge", path));
         }
     }
 
@@ -58,7 +57,7 @@ public class CCLTags {
         public static TagKey<Item> WOOL_BLACK = forge("wool/black");
 
         private static TagKey<Item> forge(String path) {
-            return ItemTags.create(new ResourceLocation("forge", path));
+            return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("forge", path));
         }
     }
 }

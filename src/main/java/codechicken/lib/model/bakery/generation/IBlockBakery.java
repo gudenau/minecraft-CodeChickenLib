@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.data.ModelData;
+import codechicken.lib.render.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -40,6 +40,6 @@ public interface IBlockBakery extends IItemBakery {
      * @param data  Any {@link ModelData} your block may have returned.
      * @return The quads for the layer or empty.
      */
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     List<BakedQuad> bakeFace(@Nullable Direction face, RenderType layer, BlockState state, ModelData data);
 }

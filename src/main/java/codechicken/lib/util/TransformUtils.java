@@ -1,5 +1,7 @@
 package codechicken.lib.util;
 
+import codechicken.lib.capability.fabric.MatrixHelper;
+import codechicken.lib.capability.fabric.TransformationDuck;
 import codechicken.lib.model.PerspectiveModelState;
 import codechicken.lib.vec.Vector3;
 import com.google.common.collect.ImmutableMap;
@@ -171,9 +173,10 @@ public class TransformUtils {
             Matrix4f tMat = pStack.last().pose();
             Matrix3f nMat = pStack.last().normal();
 
-            tMat.multiplyBackward(flipX.getMatrix());
+            var flipX = (Transformation & TransformationDuck)(Object) TransformUtils.flipX;
+            MatrixHelper.multiplyBackwards(tMat, flipX.getMatrix());
             tMat.multiply(flipX.getMatrix());
-            nMat.multiplyBackward(flipX.getNormalMatrix());
+            MatrixHelper.multiplyBackwards(nMat, flipX.getNormalMatrix());
             nMat.mul(flipX.getNormalMatrix());
 
             pStack.last().pose().multiply(tMat);

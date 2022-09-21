@@ -18,7 +18,7 @@ public interface IBakeryProvider {
      *
      * @return The Bakery!
      */
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     IBakery getBakery();
 
 }

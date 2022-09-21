@@ -1,12 +1,12 @@
 package codechicken.lib.packet;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.login.ClientLoginPacketListener;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.BiConsumer;
@@ -26,7 +26,7 @@ public interface ICustomPacketHandler {
          * @param mc      The Minecraft instance.
          * @param handler The ClientPlayNetHandler.
          */
-        @OnlyIn (Dist.CLIENT)
+        @Environment(EnvType.CLIENT)
         void handlePacket(PacketCustom packet, Minecraft mc, ClientPacketListener handler);
     }
 
@@ -70,7 +70,7 @@ public interface ICustomPacketHandler {
          * @param handler Vanilla's NetHandler.
          * @param context The network context.
          */
-        @OnlyIn (Dist.CLIENT)
+        @Environment(EnvType.CLIENT)
         void handleLoginPacket(PacketCustom packet, Minecraft mc, ClientLoginPacketListener handler, NetworkEvent.Context context);
     }
 }

@@ -3,13 +3,15 @@ package codechicken.lib.internal.proxy;
 import codechicken.lib.CodeChickenLib;
 import codechicken.lib.config.ConfigCategory;
 import codechicken.lib.config.ConfigSyncManager;
+import codechicken.lib.internal.ExceptionMessageEventHandler;
+import codechicken.lib.internal.HighlightHandler;
 import codechicken.lib.model.bakery.ModelBakery;
 import codechicken.lib.render.CCRenderEventHandler;
 import codechicken.lib.render.block.BlockRenderingRegistry;
 import codechicken.lib.render.item.map.MapRenderRegistry;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 
 /**
  * Created by covers1624 on 30/10/19.
@@ -20,7 +22,7 @@ public class ProxyClient extends Proxy {
     public static boolean messagePlayerOnRenderExceptionCaught;
 
     @Override
-    public void clientSetup(FMLClientSetupEvent event) {
+    public void clientSetup() {
         loadClientConfig();
         //OpenGLUtils.loadCaps();
         //        CustomParticleHandler.init();
@@ -28,9 +30,11 @@ public class ProxyClient extends Proxy {
         ModelBakery.init();
         CCRenderEventHandler.init();
 
-        MinecraftForge.EVENT_BUS.register(new MapRenderRegistry());
+        MapRenderRegistry.init();
         //        ClientCommandHandler.instance.registerCommand(new CCLClientCommand());
-        MinecraftForge.EVENT_BUS.addListener(this::onClientDisconnected);
+        ClientPlayConnectionEvents.DISCONNECT.register(this::onClientDisconnected);
+        ExceptionMessageEventHandler.init();
+        HighlightHandler.init();
     }
 
     private void loadClientConfig() {
@@ -57,7 +61,7 @@ public class ProxyClient extends Proxy {
         clientTag.save();
     }
 
-    private void onClientDisconnected(ClientPlayerNetworkEvent.LoggingOut event) {
+    private void onClientDisconnected(ClientPacketListener handler, Minecraft client) {
         ConfigSyncManager.onClientDisconnected();
     }
 }

@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -40,7 +40,7 @@ public class ItemUtils {
         return !player.getMainHandItem().isEmpty() || !player.getOffhandItem().isEmpty();
     }
 
-    @Nonnull
+    @NotNull
     public static ItemStack getHeldStack(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.isEmpty()) {
@@ -66,7 +66,7 @@ public class ItemUtils {
      * @param stack    ItemStack to drop.
      * @param velocity The velocity to add.
      */
-    public static void dropItem(Level world, BlockPos pos, @Nonnull ItemStack stack, double velocity) {
+    public static void dropItem(Level world, BlockPos pos, @NotNull ItemStack stack, double velocity) {
         double xVelocity = world.random.nextFloat() * velocity + (1.0D - velocity) * 0.5D;
         double yVelocity = world.random.nextFloat() * velocity + (1.0D - velocity) * 0.5D;
         double zVelocity = world.random.nextFloat() * velocity + (1.0D - velocity) * 0.5D;
@@ -82,7 +82,7 @@ public class ItemUtils {
      * @param pos   Location to drop item.
      * @param stack ItemStack to drop.
      */
-    public static void dropItem(Level world, BlockPos pos, @Nonnull ItemStack stack) {
+    public static void dropItem(Level world, BlockPos pos, @NotNull ItemStack stack) {
         dropItem(world, pos, stack, 0.7D);
     }
 
@@ -109,7 +109,7 @@ public class ItemUtils {
      * @param quantity Size of the new stack.
      * @return The new stack.
      */
-    public static ItemStack copyStack(@Nonnull ItemStack stack, int quantity) {
+    public static ItemStack copyStack(@NotNull ItemStack stack, int quantity) {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
@@ -127,7 +127,7 @@ public class ItemUtils {
      * @param stack Stack to spawn.
      * @param dir   Direction to shoot.
      */
-    public static void ejectItem(Level world, BlockPos pos, @Nonnull ItemStack stack, Direction dir) {
+    public static void ejectItem(Level world, BlockPos pos, @NotNull ItemStack stack, Direction dir) {
         pos.relative(dir);
         ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
         entity.setDeltaMovement(Vec3.atLowerCornerOf(dir.getNormal()).scale(0.3));
@@ -156,7 +156,7 @@ public class ItemUtils {
      * @param stack2 Second Stack.
      * @return Returns the difference.
      */
-    public static int compareItemStack(@Nonnull ItemStack stack1, @Nonnull ItemStack stack2) {
+    public static int compareItemStack(@NotNull ItemStack stack1, @NotNull ItemStack stack2) {
         int itemStack1ID = Item.getId(stack1.getItem());
         int itemStack2ID = Item.getId(stack2.getItem());
         return itemStack1ID != itemStack2ID ? itemStack1ID - itemStack2ID : (stack1.getDamageValue() == stack2.getDamageValue() ? 0 : stack1.getDamageValue() - stack2.getDamageValue());
@@ -167,7 +167,7 @@ public class ItemUtils {
      * @param stack2 The {@link ItemStack} to compare to.
      * @return whether the two items are the same in terms of damage and itemID.
      */
-    public static boolean areStacksSameType(@Nonnull ItemStack stack1, @Nonnull ItemStack stack2) {
+    public static boolean areStacksSameType(@NotNull ItemStack stack1, @NotNull ItemStack stack2) {
         return !stack1.isEmpty() && !stack2.isEmpty() && (stack1.getItem() == stack2.getItem() && (stack2.getDamageValue() == stack1.getDamageValue()) && ItemStack.tagMatches(stack2, stack1));
     }
 }

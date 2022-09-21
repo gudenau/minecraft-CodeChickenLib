@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.ForgeHooksClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,7 +30,7 @@ public class ItemRendererMixin {
             ci.cancel();
             mStack.pushPose();
             //If anyone doesnt return an IItemRenderer from here, your doing it wrong.
-            IItemRenderer renderer = (IItemRenderer) ForgeHooksClient.handleCameraTransforms(mStack, modelIn, transformType, leftHand);
+            IItemRenderer renderer = (IItemRenderer)((IItemRenderer) modelIn).applyTransform(transformType, mStack, leftHand);
             mStack.translate(-0.5D, -0.5D, -0.5D);
             renderer.renderItem(stack, transformType, mStack, buffers, packedLight, packedOverlay);
             mStack.popPose();

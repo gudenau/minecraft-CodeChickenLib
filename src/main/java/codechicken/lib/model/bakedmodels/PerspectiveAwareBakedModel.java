@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
@@ -58,7 +59,12 @@ public class PerspectiveAwareBakedModel extends AbstractBakedPropertiesModel {
         }
         return ImmutableList.of();
     }
-
+    
+    @Override
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
+    }
+    
     @Override
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;

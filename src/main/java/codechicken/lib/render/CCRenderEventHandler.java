@@ -1,18 +1,13 @@
 package codechicken.lib.render;
 
-import codechicken.lib.raytracer.VoxelShapeBlockHitResult;
-import codechicken.lib.vec.Matrix4;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderHighlightEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.client.Minecraft;
 
 public class CCRenderEventHandler {
-
+    private static final CCRenderEventHandler INSTANCE = new CCRenderEventHandler();
+    
     public static int renderTime;
     public static float renderFrame;
 
@@ -20,27 +15,21 @@ public class CCRenderEventHandler {
 
     public static void init() {
         if (!hasInit) {
-            MinecraftForge.EVENT_BUS.register(new CCRenderEventHandler());
             hasInit = true;
+            ClientTickEvents.END_CLIENT_TICK.register(INSTANCE::clientTick);
+            WorldRenderEvents.START.register(INSTANCE::renderTick);
         }
     }
 
-    @SubscribeEvent
-    public void clientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            renderTime++;
-        }
+    public void clientTick(Minecraft minecraft) {
+        renderTime++;
     }
 
-    @SubscribeEvent
-    public void renderTick(TickEvent.RenderTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            renderFrame = event.renderTickTime;
-        }
+    public void renderTick(WorldRenderContext context) {
+        renderFrame = this.f_91012_ ? this.f_91013_ : this.f_90991_.f_92518_;
     }
 
-    @OnlyIn (Dist.CLIENT)
-    @SubscribeEvent (priority = EventPriority.LOW)
+    /*TODO
     public void onBlockHighlight(RenderHighlightEvent.Block event) {
         //We have found a CuboidRayTraceResult, Lets render it properly..
         BlockHitResult hit = event.getTarget();
@@ -51,4 +40,5 @@ public class CCRenderEventHandler {
             RenderUtils.bufferShapeHitBox(mat, event.getMultiBufferSource(), event.getCamera(), voxelHit.shape);
         }
     }
+     */
 }

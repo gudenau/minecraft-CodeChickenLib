@@ -8,7 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class SlotDummy extends SlotHandleClicks {
 
@@ -31,7 +31,7 @@ public class SlotDummy extends SlotHandleClicks {
         return ItemStack.EMPTY;
     }
 
-    public void slotClick(@Nonnull ItemStack held, int button, boolean shift) {
+    public void slotClick(@NotNull ItemStack held, int button, boolean shift) {
         ItemStack tstack = getItem();
         if (!held.isEmpty() && (tstack.isEmpty() || !InventoryUtils.canStack(held, tstack))) {
             int quantity = Math.min(held.getCount(), stackLimit);
@@ -65,7 +65,7 @@ public class SlotDummy extends SlotHandleClicks {
     }
 
     @Override
-    public void set(@Nonnull ItemStack stack) {
+    public void set(@NotNull ItemStack stack) {
         if (!stack.isEmpty() && stack.getCount() > stackLimit) {
             stack = ItemUtils.copyStack(stack, stackLimit);
         }

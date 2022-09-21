@@ -7,9 +7,12 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -24,8 +27,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -164,12 +165,12 @@ public final class PacketCustom extends MCDataByteBuf {
         }
     }
 
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void sendToServer() {
         sendToServer(toPacket(NetworkDirection.PLAY_TO_SERVER));
     }
 
-    @OnlyIn (Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void sendToServer(Packet<?> packet) {
         Minecraft.getInstance().getConnection().send(packet);
     }
@@ -231,10 +232,10 @@ public final class PacketCustom extends MCDataByteBuf {
     @Override public PacketCustom writeItemStack(ItemStack stack) { super.writeItemStack(stack); return this; }
     @Override public PacketCustom writeItemStack(ItemStack stack, boolean limitedTag) { super.writeItemStack(stack, limitedTag); return this; }
     @Override public PacketCustom writeTextComponent(Component component) { super.writeTextComponent(component); return this; }
-    @Override public <T> PacketCustom writeRegistryIdDirect(IForgeRegistry<T> registry, T entry) { super.writeRegistryIdDirect(registry, entry); return this; }
-    @Override public <T> PacketCustom writeRegistryIdDirect(IForgeRegistry<T> registry, ResourceLocation entry) { super.writeRegistryIdDirect(registry, entry); return this; }
-    @Override public <T> PacketCustom writeRegistryId(IForgeRegistry<T> registry, T entry) { super.writeRegistryId(registry, entry); return this; }
-    @Override public <T> PacketCustom writeRegistryId(IForgeRegistry<T> registry, ResourceLocation entry) { super.writeRegistryId(registry, entry); return this; }
+    @Override public <T> PacketCustom writeRegistryIdDirect(Registry<T> registry, T entry) { super.writeRegistryIdDirect(registry, entry); return this; }
+    @Override public <T> PacketCustom writeRegistryIdDirect(Registry<T> registry, ResourceLocation entry) { super.writeRegistryIdDirect(registry, entry); return this; }
+    @Override public <T> PacketCustom writeRegistryId(Registry<T> registry, T entry) { super.writeRegistryId(registry, entry); return this; }
+    @Override public <T> PacketCustom writeRegistryId(Registry<T> registry, ResourceLocation entry) { super.writeRegistryId(registry, entry); return this; }
     @Override public PacketCustom writeByteBuf(ByteBuf buf) { super.writeByteBuf(buf); return this; }
     @Override public PacketCustom append(ByteBuf buf) { super.append(buf); return this; }
     //@formatter:off

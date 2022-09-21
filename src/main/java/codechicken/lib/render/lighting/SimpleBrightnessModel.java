@@ -1,5 +1,6 @@
 package codechicken.lib.render.lighting;
 
+import codechicken.lib.internal.mixin.accessor.DirectionAccessor;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -30,7 +31,7 @@ public class SimpleBrightnessModel implements IVertexOperation {
 
     public int sample(int side) {
         if ((sampled & 1 << side) == 0) {
-            c = pos.relative(Direction.BY_3D_DATA[side]);
+            c = pos.relative(DirectionAccessor.getBy3dData()[side]);
             samples[side] = LevelRenderer.getLightColor(access, c);
             sampled |= 1 << side;
         }

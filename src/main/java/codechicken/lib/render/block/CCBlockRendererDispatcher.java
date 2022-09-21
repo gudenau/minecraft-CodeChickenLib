@@ -1,7 +1,10 @@
 package codechicken.lib.render.block;
 
+import codechicken.lib.capability.fabric.client.BlockRenderDispatcherDuck;
 import codechicken.lib.internal.ExceptionMessageEventHandler;
+import codechicken.lib.internal.mixin.accessor.client.BlockRenderDispatcherAccessor;
 import codechicken.lib.internal.proxy.ProxyClient;
+import codechicken.lib.render.ModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.CrashReport;
@@ -13,6 +16,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -21,8 +25,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,19 +44,23 @@ public class CCBlockRendererDispatcher extends BlockRenderDispatcher {
     private static long lastTime;
 
     public CCBlockRendererDispatcher(BlockRenderDispatcher parent, BlockColors blockColours) {
-        super(parent.getBlockModelShaper(), parent.blockEntityRenderer, blockColours);
-        parentDispatcher = parent;
-        this.modelRenderer = parent.modelRenderer;
-        this.liquidBlockRenderer = parent.liquidBlockRenderer;
+        super(parent.getBlockModelShaper(), ((BlockRenderDispatcherAccessor) parent).getBlockEntityRenderer(), blockColours);
+        var accessibleParent = (BlockRenderDispatcher & BlockRenderDispatcherAccessor) parent;
+        parentDispatcher = accessibleParent;
+        accessibleParent.setModelRenderer(accessibleParent.getModelRenderer());
+        accessibleParent.setLiquidBlockRenderer(accessibleParent.getLiquidBlockRenderer());
     }
 
     //In world.
+    //TODO set ModelData/RenderType before calling
     @Override
-    public void renderBatched(BlockState state, BlockPos pos, BlockAndTintGetter level, PoseStack stack, VertexConsumer builder, boolean checkSides, RandomSource rand, ModelData modelData, RenderType renderType) {
+    public void renderBatched(BlockState state, BlockPos pos, BlockAndTintGetter level, PoseStack stack, VertexConsumer builder, boolean checkSides, RandomSource rand) {
         try {
+            var duck = (BlockRenderDispatcherDuck) this;
+            var renderType = duck.getRenderType();
             ICCBlockRenderer renderer = BlockRenderingRegistry.findFor(state.getBlock(), e -> e.canHandleBlock(level, pos, state, renderType));
             if (renderer != null) {
-                renderer.renderBlock(state, pos, level, stack, builder, rand, modelData, renderType);
+                renderer.renderBlock(state, pos, level, stack, builder, rand, duck.getModelData(), renderType);
                 return;
             }
         } catch (Throwable t) {
@@ -68,7 +74,7 @@ public class CCBlockRendererDispatcher extends BlockRenderDispatcher {
             throw new ReportedException(crashreport);
         }
         try {
-            parentDispatcher.renderBatched(state, pos, level, stack, builder, checkSides, rand, modelData, renderType);
+            parentDispatcher.renderBatched(state, pos, level, stack, builder, checkSides, rand);
         } catch (Throwable t) {
             if (ProxyClient.catchBlockRenderExceptions) {
                 handleCaughtException(t, state, pos, level);
@@ -79,13 +85,14 @@ public class CCBlockRendererDispatcher extends BlockRenderDispatcher {
     }
 
     //Block Damage
+    //TODO set ModelData before calling
     @Override
-    public void renderBreakingTexture(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrixStackIn, VertexConsumer vertexBuilderIn, ModelData data) {
+    public void renderBreakingTexture(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrixStackIn, VertexConsumer vertexBuilderIn) {
         ICCBlockRenderer renderer = BlockRenderingRegistry.findFor(state.getBlock(), e -> e.canHandleBlock(world, pos, state, null));
         if (renderer != null) {
-            renderer.renderBreaking(state, pos, world, matrixStackIn, vertexBuilderIn, data);
+            renderer.renderBreaking(state, pos, world, matrixStackIn, vertexBuilderIn, ((BlockRenderDispatcherDuck) this).getModelData());
         } else {
-            parentDispatcher.renderBreakingTexture(state, pos, world, matrixStackIn, vertexBuilderIn, data);
+            parentDispatcher.renderBreakingTexture(state, pos, world, matrixStackIn, vertexBuilderIn);
         }
     }
 
@@ -101,13 +108,15 @@ public class CCBlockRendererDispatcher extends BlockRenderDispatcher {
     }
 
     //From an entity
+    //TODO set ModelData/RenderType before calling
     @Override
-    public void renderSingleBlock(BlockState blockStateIn, PoseStack matrixStackIn, MultiBufferSource bufferTypeIn, int combinedLightIn, int combinedOverlayIn, ModelData modelData, RenderType renderType) {
+    public void renderSingleBlock(BlockState blockStateIn, PoseStack matrixStackIn, MultiBufferSource bufferTypeIn, int combinedLightIn, int combinedOverlayIn) {
         ICCBlockRenderer renderer = BlockRenderingRegistry.findFor(blockStateIn.getBlock(), e -> e.canHandleEntity(blockStateIn));
         if (renderer != null) {
-            renderer.renderEntity(blockStateIn, matrixStackIn, bufferTypeIn, combinedLightIn, combinedOverlayIn, modelData, renderType);
+            var duck = (BlockRenderDispatcherDuck) this;
+            renderer.renderEntity(blockStateIn, matrixStackIn, bufferTypeIn, combinedLightIn, combinedOverlayIn, duck.getModelData(), duck.getRenderType());
         } else {
-            parentDispatcher.renderSingleBlock(blockStateIn, matrixStackIn, bufferTypeIn, combinedLightIn, combinedOverlayIn, modelData, renderType);
+            parentDispatcher.renderSingleBlock(blockStateIn, matrixStackIn, bufferTypeIn, combinedLightIn, combinedOverlayIn);
         }
     }
 
@@ -119,11 +128,11 @@ public class CCBlockRendererDispatcher extends BlockRenderDispatcher {
         StringBuilder builder = new StringBuilder("\n CCL has caught an exception whilst rendering a block\n");
         builder.append("  BlockPos:      ").append(String.format("x:%s, y:%s, z:%s", pos.getX(), pos.getY(), pos.getZ())).append("\n");
         builder.append("  Block Class:   ").append(tryOrNull(() -> inBlock.getClass())).append("\n");
-        builder.append("  Registry Name: ").append(tryOrNull(() -> ForgeRegistries.BLOCKS.getKey(inBlock))).append("\n");
+        builder.append("  Registry Name: ").append(tryOrNull(() -> Registry.BLOCK.getKey(inBlock))).append("\n");
         builder.append("  State:         ").append(inState).append("\n");
         builder.append(" Tile at position\n");
         builder.append("  Tile Class:    ").append(tryOrNull(() -> tile.getClass())).append("\n");
-        builder.append("  Tile Id:       ").append(tryOrNull(() -> ForgeRegistries.BLOCK_ENTITY_TYPES.getKey(tile.getType()))).append("\n");
+        builder.append("  Tile Id:       ").append(tryOrNull(() -> Registry.BLOCK_ENTITY_TYPE.getKey(tile.getType()))).append("\n");
         builder.append("  Tile NBT:      ").append(tryOrNull(() -> tile.saveWithFullMetadata())).append("\n");
         builder.append("This functionality can be disabled in the CCL config file.\n");
         if (ProxyClient.messagePlayerOnRenderExceptionCaught) {

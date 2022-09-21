@@ -1,12 +1,11 @@
 package codechicken.lib.world;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ImposterProtoChunk;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.ChunkEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TileChunkLoadHook {
 
@@ -17,13 +16,12 @@ public class TileChunkLoadHook {
             return;
         }
         init = true;
-
-        MinecraftForge.EVENT_BUS.register(new TileChunkLoadHook());
+    
+        ServerChunkEvents.CHUNK_LOAD.register(new TileChunkLoadHook()::onChunkLoad);
     }
-
-    @SubscribeEvent
-    public void onChunkLoad(ChunkEvent.Load event) {
-        ChunkAccess iChunk = event.getChunk();
+    
+    public void onChunkLoad(ServerLevel world, LevelChunk chunkArg) {
+        ChunkAccess iChunk = chunkArg;
         LevelChunk chunk;
         if (iChunk instanceof LevelChunk) {
             chunk = (LevelChunk) iChunk;

@@ -1,5 +1,6 @@
 package codechicken.lib.util;
 
+import codechicken.lib.internal.mixin.accessor.client.VertexFormatAccessor;
 import codechicken.lib.model.IVertexConsumer;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -53,8 +54,8 @@ public class VertexUtils {
     public static void unpack(int[] from, float[] to, VertexFormat formatFrom, int v, int e) {
         int length = Math.min(4, to.length);
         VertexFormatElement element = formatFrom.getElements().get(e);
-        int vertexStart = v * formatFrom.getVertexSize() + formatFrom.getOffset(e);
-        int count = element.getElementCount();
+        int vertexStart = v * formatFrom.getVertexSize() + ((VertexFormatAccessor) formatFrom).getOffsets().getInt(e);
+        int count = element.getCount();
         VertexFormatElement.Type type = element.getType();
         VertexFormatElement.Usage usage = element.getUsage();
         int size = type.getSize();
@@ -91,8 +92,8 @@ public class VertexUtils {
 
     public static void pack(float[] from, int[] to, VertexFormat formatTo, int v, int e) {
         VertexFormatElement element = formatTo.getElements().get(e);
-        int vertexStart = v * formatTo.getVertexSize() + formatTo.getOffset(e);
-        int count = element.getElementCount();
+        int vertexStart = v * formatTo.getVertexSize() + ((VertexFormatAccessor) formatTo).getOffsets().getInt(e);
+        int count = element.getCount();
         VertexFormatElement.Type type = element.getType();
         int size = type.getSize();
         int mask = (256 << (8 * (size - 1))) - 1;

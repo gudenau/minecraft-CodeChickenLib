@@ -1,10 +1,10 @@
 package codechicken.lib.item;
 
+import codechicken.lib.internal.mixin.accessor.ArmorMaterialsAccessor;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.function.Supplier;
@@ -99,7 +99,7 @@ public class SimpleArmorMaterial implements ArmorMaterial {
 
         public Builder durabilityFactor(int factor) {
             for (int i = 0; i < 4; i++) {
-                durability[i] = ArmorMaterials.HEALTH_PER_SLOT[i] * factor;
+                durability[i] = ArmorMaterialsAccessor.getHealthPerSlot()[i] * factor;
             }
             return this;
         }

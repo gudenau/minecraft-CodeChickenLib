@@ -18,7 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.Registry;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -103,7 +103,7 @@ public class ServerUtils {
         MenuType<?> type = container.getType();
 
         PacketCustom packet = new PacketCustom(CCLNetwork.NET_CHANNEL, C_OPEN_CONTAINER);
-        packet.writeRegistryIdDirect(ForgeRegistries.MENU_TYPES, type);
+        packet.writeRegistryIdDirect(Registry.MENU, type);
         packet.writeVarInt(containerId);
         packet.writeTextComponent(containerProvider.getDisplayName());
         packetConsumer.accept(packet);

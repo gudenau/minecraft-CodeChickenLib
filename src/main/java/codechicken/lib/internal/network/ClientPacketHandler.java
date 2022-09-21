@@ -11,11 +11,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import static codechicken.lib.internal.network.CCLNetwork.C_ADD_LANDING_EFFECTS;
 import static codechicken.lib.internal.network.CCLNetwork.C_OPEN_CONTAINER;
@@ -41,7 +41,7 @@ public class ClientPacketHandler implements IClientPacketHandler {
 
     @SuppressWarnings ("unchecked")
     private void handleOpenContainer(PacketCustom packet, Minecraft mc) {
-        MenuType<?> rawType = packet.readRegistryIdDirect(ForgeRegistries.MENU_TYPES);
+        MenuType<?> rawType = packet.readRegistryIdDirect(Registry.MENU);
         int windowId = packet.readVarInt();
         Component name = packet.readTextComponent();
         if (rawType instanceof ICCLContainerType<?> type) {

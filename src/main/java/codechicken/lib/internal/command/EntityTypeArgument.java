@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 
 import static codechicken.lib.CodeChickenLib.MOD_ID;
-import static net.minecraft.commands.arguments.ResourceKeyArgument.getRegistryKeyType;
+import static codechicken.lib.internal.mixin.accessor.ResourceKeyArgumentAccessor.invokeGetRegistryKeyType;
 
 /**
  * Created by covers1624 on 17/9/20.
@@ -27,6 +27,6 @@ public class EntityTypeArgument {
     }
 
     public static Holder<EntityType<?>> getEntityType(CommandContext<CommandSourceStack> stack, String name) throws CommandSyntaxException {
-        return getRegistryKeyType(stack, name, Registry.ENTITY_TYPE_REGISTRY, MISSING);
+        return invokeGetRegistryKeyType(stack, name, Registry.ENTITY_TYPE_REGISTRY, MISSING);
     }
 }

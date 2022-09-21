@@ -4,7 +4,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,19 +53,19 @@ public class MappedInventoryAccess implements Container {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack getItem(int slot) {
         return inv.getItem(slotMap.get(slot));
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack removeItem(int slot, int amount) {
         return inv.removeItem(slotMap.get(slot), amount);
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ItemStack removeItemNoUpdate(int slot) {
         return inv.removeItemNoUpdate(slotMap.get(slot));
     }

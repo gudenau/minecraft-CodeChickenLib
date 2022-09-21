@@ -5,7 +5,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Inventory wrapper for unified ISided/IInventory access
@@ -19,7 +19,7 @@ public class InventoryRange {
 
     @Deprecated// Use EnumFacing version.
     public InventoryRange(Container inv, int side) {
-        this(inv, Direction.BY_3D_DATA[side]);
+        this(inv, Direction.from3DDataValue(side));
     }
 
     public InventoryRange(Container inv, Direction side) {
@@ -57,11 +57,11 @@ public class InventoryRange {
         }
     }
 
-    public boolean canInsertItem(int slot, @Nonnull ItemStack item) {
+    public boolean canInsertItem(int slot, @NotNull ItemStack item) {
         return sidedInv == null ? inv.canPlaceItem(slot, item) : sidedInv.canPlaceItemThroughFace(slot, item, face);
     }
 
-    public boolean canExtractItem(int slot, @Nonnull ItemStack item) {
+    public boolean canExtractItem(int slot, @NotNull ItemStack item) {
         return sidedInv == null ? inv.canPlaceItem(slot, item) : sidedInv.canTakeItemThroughFace(slot, item, face);
     }
 

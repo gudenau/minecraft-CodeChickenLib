@@ -2,6 +2,8 @@ package codechicken.lib.render;
 
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
+import codechicken.lib.internal.mixin.accessor.client.BufferBuilderAccessor;
+import codechicken.lib.internal.mixin.accessor.client.DefaultedVertexConsumerAccessor;
 import codechicken.lib.model.CachedFormat;
 import codechicken.lib.render.buffer.ISpriteAwareVertexConsumer;
 import codechicken.lib.render.buffer.TransformingVertexConsumer;
@@ -26,8 +28,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
 
 /**
  * The core of the CodeChickenLib render system.
@@ -130,7 +130,7 @@ public class CCRenderState {
      * @param r The {@link BufferBuilder}.
      */
     public void bind(BufferBuilder r) {
-        bind(r, r.format);
+        bind(r, ((BufferBuilderAccessor) r).getFormat());
     }
 
     /**
@@ -265,9 +265,9 @@ public class CCRenderState {
                     }
                     break;
                 case COLOR:
-                    if (r instanceof BufferBuilder && ((BufferBuilder) r).defaultColorSet) {
+                    if (r instanceof BufferBuilder bb && ((DefaultedVertexConsumerAccessor) r).getDefaultColorSet()) {
                         //-_- Fucking mojang..
-                        ((BufferBuilder) r).nextElement();
+                        bb.nextElement();
                     } else {
                         r.color(colour >>> 24, colour >> 16 & 0xFF, colour >> 8 & 0xFF, alphaOverride >= 0 ? alphaOverride : colour & 0xFF);
                     }
@@ -292,6 +292,7 @@ public class CCRenderState {
         brightness = Minecraft.getInstance().getEntityRenderDispatcher().getPackedLightCoords(entity, frameDelta);
     }
 
+    /*TODO
     public void setFluidColour(FluidStack fluidStack) {
         setFluidColour(fluidStack, 0xFF);
     }
@@ -299,6 +300,7 @@ public class CCRenderState {
     public void setFluidColour(FluidStack fluidStack, int alpha) {
         this.baseColour = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack) << 8 | alpha;
     }
+     */
 
     public void setColour(Colour colour) {
         this.colour = colour.rgba();

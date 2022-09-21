@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
@@ -15,10 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
 
 import java.io.DataOutput;
 import java.io.DataOutputStream;
@@ -31,7 +28,6 @@ import java.util.UUID;
 
 import static codechicken.lib.data.DataUtils.checkLen;
 import static java.text.MessageFormat.format;
-import static net.covers1624.quack.util.SneakyUtils.unsafeCast;
 
 /**
  * Provides the ability to write various datas to some sort of data stream.
@@ -883,11 +879,11 @@ public interface MCDataOutput {
         } else {
             writeBoolean(true);
             Item item = stack.getItem();
-            writeRegistryIdDirect(ForgeRegistries.ITEMS, item);
+            writeRegistryIdDirect(Registry.ITEM, item);
             writeVarInt(stack.getCount());
             CompoundTag nbt = null;
             if (item.canBeDepleted() || item.shouldOverrideMultiplayerNbt()) {
-                nbt = limitedTag ? stack.getShareTag() : stack.getTag();
+                nbt = /*limitedTag ? stack.getShareTag() :*/ stack.getTag();
             }
             writeCompoundNBT(nbt);
         }
@@ -900,17 +896,19 @@ public interface MCDataOutput {
      * @param stack The {@link FluidStack}.
      * @return The same stream.
      */
+    /*TODO
     default MCDataOutput writeFluidStack(FluidStack stack) {
         if (stack.isEmpty()) {
             writeBoolean(false);
         } else {
             writeBoolean(true);
-            writeRegistryIdDirect(ForgeRegistries.FLUIDS, stack.getFluid());
+            writeRegistryIdDirect(Registry.FLUID, stack.getFluid());
             writeVarInt(stack.getAmount());
             writeCompoundNBT(stack.getTag());
         }
         return this;
     }
+     */
 
     /**
      * Writes a {@link Component} to the stream.
@@ -931,9 +929,8 @@ public interface MCDataOutput {
      * @param entry    The object to write to the stream.
      * @return The same stream.
      */
-    default <T> MCDataOutput writeRegistryIdDirect(IForgeRegistry<T> registry, T entry) {
-        ForgeRegistry<T> r = unsafeCast(Objects.requireNonNull(registry));
-        writeVarInt(r.getID(entry));
+    default <T> MCDataOutput writeRegistryIdDirect(Registry<T> registry, T entry) {
+        writeVarInt(registry.getId(entry));
         return this;
     }
 
@@ -946,9 +943,8 @@ public interface MCDataOutput {
      * @param entry    The name of the registry object to write.
      * @return The same stream.
      */
-    default <T> MCDataOutput writeRegistryIdDirect(IForgeRegistry<T> registry, ResourceLocation entry) {
-        ForgeRegistry<T> r = unsafeCast(Objects.requireNonNull(registry));
-        writeVarInt(r.getID(entry));
+    default <T> MCDataOutput writeRegistryIdDirect(Registry<T> registry, ResourceLocation entry) {
+        writeVarInt(registry.getId(registry.get(entry)));
         return this;
     }
 
@@ -960,8 +956,8 @@ public interface MCDataOutput {
      * @param entry    The object to write to the stream.
      * @return The same stream.
      */
-    default <T> MCDataOutput writeRegistryId(IForgeRegistry<T> registry, T entry) {
-        ResourceLocation rName = registry.getRegistryName();
+    default <T> MCDataOutput writeRegistryId(Registry<T> registry, T entry) {
+        ResourceLocation rName = registry.key().location();
         if (!registry.containsValue(entry)) {
             throw new IllegalArgumentException(format("Registry '{0}' does not contain entry '{1}'", rName, entry));
         }
@@ -978,8 +974,8 @@ public interface MCDataOutput {
      * @param entry    The name of the registry object to write.
      * @return The same stream.
      */
-    default <T> MCDataOutput writeRegistryId(IForgeRegistry<T> registry, ResourceLocation entry) {
-        ResourceLocation rName = registry.getRegistryName();
+    default <T> MCDataOutput writeRegistryId(Registry<T> registry, ResourceLocation entry) {
+        ResourceLocation rName = registry.key().location();
         if (!registry.containsKey(entry)) {
             throw new IllegalArgumentException(format("Registry '{0}' does not contain entry '{1}'", rName, entry));
         }

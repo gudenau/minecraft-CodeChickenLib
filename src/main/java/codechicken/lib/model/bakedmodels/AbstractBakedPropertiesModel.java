@@ -1,5 +1,6 @@
 package codechicken.lib.model.bakedmodels;
 
+import codechicken.lib.internal.mixin.accessor.DirectionAccessor;
 import codechicken.lib.model.CachedFormat;
 import codechicken.lib.model.PerspectiveModel;
 import codechicken.lib.model.PerspectiveModelState;
@@ -19,11 +20,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.model.data.ModelData;
+import codechicken.lib.render.ModelData;
 import net.minecraftforge.common.util.ConcatenatedListView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +71,7 @@ public abstract class AbstractBakedPropertiesModel implements PerspectiveModel, 
         List<List<BakedQuad>> quadsList = new LinkedList<>();
         for (RenderType layer : getRenderTypes(state, RandomSource.create(42), modelData)) {
             quadsList.add(getQuads(state, null, RandomSource.create(0), modelData, layer));
-            for (Direction face : Direction.BY_3D_DATA) {
+            for (Direction face : DirectionAccessor.getBy3dData()) {
                 quadsList.add(getQuads(state, face, RandomSource.create(0), modelData, layer));
             }
         }
@@ -77,7 +79,7 @@ public abstract class AbstractBakedPropertiesModel implements PerspectiveModel, 
     }
 
     @Override
-    public Set<TextureAtlasSprite> getHitEffects(@Nonnull BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData modelData) {
+    public Set<TextureAtlasSprite> getHitEffects(@NotNull @NotNull BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData modelData) {
         Vector3 vec = new Vector3(traceResult.getLocation()).subtract(traceResult.getBlockPos());
         return getAllQuads(state, modelData).stream()
                 .filter(quad -> quad.getDirection() == traceResult.getDirection())

@@ -1,0 +1,81 @@
+accessWidener	v1	named
+
+accessible	method	net/minecraft/world/phys/shapes/VoxelShape	<init>	(Lnet/minecraft/world/phys/shapes/DiscreteVoxelShape;)V
+
+accessible	method	net/minecraft/world/phys/BlockHitResult	<init>	(ZLnet/minecraft/world/phys/Vec3;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;Z)V
+
+extendable	class	net/minecraft/client/renderer/block/model/ItemOverrides
+accessible	method	net/minecraft/client/renderer/block/model/ItemOverrides	<init>	()V
+
+accessible	field	com/mojang/blaze3d/shaders/Uniform	intValues	Ljava/nio/IntBuffer;
+mutable	field	com/mojang/blaze3d/shaders/Uniform	intValues	Ljava/nio/IntBuffer;
+accessible	field	com/mojang/blaze3d/shaders/Uniform	floatValues	Ljava/nio/FloatBuffer;
+mutable	field	com/mojang/blaze3d/shaders/Uniform	floatValues	Ljava/nio/FloatBuffer;
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(F)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(FF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(IF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(FFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(Lcom/mojang/math/Vector3f;)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(FFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(Lcom/mojang/math/Vector4f;)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(I)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(II)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(III)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(IIII)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	([F)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat2x2	(FFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat2x3	(FFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat2x4	(FFFFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat3x2	(FFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat3x3	(FFFFFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat3x4	(FFFFFFFFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat4x2	(FFFFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat4x3	(FFFFFFFFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setMat4x4	(FFFFFFFFFFFFFFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(Lcom/mojang/math/Matrix4f;)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	set	(Lcom/mojang/math/Matrix3f;)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setSafe	(FFFF)V
+extendable	method	com/mojang/blaze3d/shaders/Uniform	setSafe	(IIII)V
+accessible	field	com/mojang/blaze3d/shaders/Uniform	dirty	Z
+
+extendable	method	net/minecraft/client/renderer/ShaderInstance	parseUniformNode	(Lcom/google/gson/JsonElement;)V
+
+accessible	field	com/mojang/math/Matrix3f	m00	F
+accessible	field	com/mojang/math/Matrix3f	m01	F
+accessible	field	com/mojang/math/Matrix3f	m02	F
+accessible	field	com/mojang/math/Matrix3f	m10	F
+accessible	field	com/mojang/math/Matrix3f	m11	F
+accessible	field	com/mojang/math/Matrix3f	m12	F
+accessible	field	com/mojang/math/Matrix3f	m20	F
+accessible	field	com/mojang/math/Matrix3f	m21	F
+accessible	field	com/mojang/math/Matrix3f	m22	F
+
+accessible	field	com/mojang/math/Matrix4f	m00	F
+accessible	field	com/mojang/math/Matrix4f	m01	F
+accessible	field	com/mojang/math/Matrix4f	m02	F
+accessible	field	com/mojang/math/Matrix4f	m03	F
+accessible	field	com/mojang/math/Matrix4f	m10	F
+accessible	field	com/mojang/math/Matrix4f	m11	F
+accessible	field	com/mojang/math/Matrix4f	m12	F
+accessible	field	com/mojang/math/Matrix4f	m13	F
+accessible	field	com/mojang/math/Matrix4f	m20	F
+accessible	field	com/mojang/math/Matrix4f	m21	F
+accessible	field	com/mojang/math/Matrix4f	m22	F
+accessible	field	com/mojang/math/Matrix4f	m23	F
+accessible	field	com/mojang/math/Matrix4f	m30	F
+accessible	field	com/mojang/math/Matrix4f	m31	F
+accessible	field	com/mojang/math/Matrix4f	m32	F
+accessible	field	com/mojang/math/Matrix4f	m33	F
+
+extendable	class	net/minecraft/client/renderer/RenderStateShard$DepthTestStateShard
+accessible	class	net/minecraft/client/renderer/RenderStateShard$DepthTestStateShard
+
+accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
+
+accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
+accessible field net/minecraft/client/renderer/RenderStateShard TRANSLUCENT_TRANSPARENCY Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
+accessible field net/minecraft/client/renderer/RenderStateShard COLOR_WRITE Lnet/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard;
+accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_TEX_LIGHTMAP_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
+accessible field net/minecraft/client/renderer/RenderStateShard BLOCK_SHEET Lnet/minecraft/client/renderer/RenderStateShard$TextureStateShard;
+accessible field net/minecraft/client/renderer/RenderStateShard LIGHTMAP Lnet/minecraft/client/renderer/RenderStateShard$LightmapStateShard;

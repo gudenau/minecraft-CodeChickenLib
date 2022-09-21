@@ -84,7 +84,7 @@ public class CapabilityCache {
      */
     public void clear() {
         selfCache.clear();
-        Arrays.stream(Direction.BY_3D_DATA).map(this::getCacheForSide).forEach(Map::clear);
+        Arrays.stream(DirectionAccessor.getBy3dData()).map(this::getCacheForSide).forEach(Map::clear);
     }
 
     /**
@@ -104,7 +104,7 @@ public class CapabilityCache {
         if (side < 0 || diff != 1) {
             return;
         }
-        Direction sideChanged = Direction.BY_3D_DATA[side];
+        Direction sideChanged = DirectionAccessor.getBy3dData()[side];
 
         Iterables.concat(selfCache.entrySet(), getCacheForSide(sideChanged).entrySet()).forEach(entry -> {
             Object2IntPair<LazyOptional<?>> pair = entry.getValue();
