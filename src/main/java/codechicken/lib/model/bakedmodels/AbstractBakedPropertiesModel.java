@@ -77,7 +77,7 @@ public abstract class AbstractBakedPropertiesModel implements PerspectiveModel, 
     }
 
     @Override
-    public Set<TextureAtlasSprite> getHitEffects(@NotNull @NotNull BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData modelData) {
+    public Set<TextureAtlasSprite> getHitEffects(@NotNull BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData modelData) {
         Vector3 vec = new Vector3(traceResult.getLocation()).subtract(traceResult.getBlockPos());
         return getAllQuads(state, modelData).stream()
                 .filter(quad -> quad.getDirection() == traceResult.getDirection())

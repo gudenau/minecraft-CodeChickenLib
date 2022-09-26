@@ -903,7 +903,7 @@ public interface MCDataOutput {
         } else {
             writeBoolean(true);
             writeRegistryIdDirect(Registry.FLUID, stack.getFluid());
-            writeVarInt(stack.getAmount());
+            writeLong(stack.getAmount());
             writeCompoundNBT(stack.getTag());
         }
         return this;

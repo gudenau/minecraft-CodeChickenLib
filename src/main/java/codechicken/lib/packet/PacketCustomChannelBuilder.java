@@ -5,6 +5,7 @@ import codechicken.lib.packet.ICustomPacketHandler.ILoginPacketHandler;
 import codechicken.lib.packet.ICustomPacketHandler.IServerPacketHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
@@ -114,7 +115,7 @@ public class PacketCustomChannelBuilder {
      * @return The same builder.
      */
     public PacketCustomChannelBuilder assignClientHandler(Supplier<Supplier<IClientPacketHandler>> clientHandler) {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.dist == EnvType.CLIENT) {
             this.clientHandler = clientHandler.get().get();
         }
         return this;

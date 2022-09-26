@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ChunkRenderTypeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -15,6 +15,8 @@ import codechicken.lib.util.TransformUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.github.fabricators_of_create.porting_lib.model.IModelData;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -23,11 +25,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraft.core.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,7 +96,7 @@ public class ModelBakery {
 
     public static void registerItemKeyGenerator(Item item, IItemStackKeyGenerator generator) {
         if (itemKeyGeneratorMap.containsKey(item)) {
-            throw new IllegalArgumentException("Unable to register IItemStackKeyGenerator as one is already registered for item: " + ForgeRegistries.ITEMS.getKey(item));
+            throw new IllegalArgumentException("Unable to register IItemStackKeyGenerator as one is already registered for item: " + Registry.ITEM.getKey(item));
         }
         itemKeyGeneratorMap.put(item, generator);
     }

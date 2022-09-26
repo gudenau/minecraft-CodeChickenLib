@@ -26,7 +26,7 @@ public class CCRenderEventHandler {
     }
 
     public void renderTick(WorldRenderContext context) {
-        renderFrame = this.f_91012_ ? this.f_91013_ : this.f_90991_.f_92518_;
+        renderFrame = this.field_1734 ? this.field_1741 : this.field_1728.field_1970;
     }
 
     /*TODO

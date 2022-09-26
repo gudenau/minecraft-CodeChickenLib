@@ -3,6 +3,7 @@ package codechicken.lib.data;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import com.mojang.math.Vector3f;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.EncoderException;
@@ -617,13 +618,12 @@ public interface MCDataInput {
      *
      * @return The {@link FluidStack}.
      */
-    /*TODO
     default FluidStack readFluidStack() {
         if (!readBoolean()) {
             return FluidStack.EMPTY;
         } else {
             Fluid fluid = readRegistryIdDirect(Registry.FLUID);
-            int amount = readVarInt();
+            long amount = readVarLong();
             CompoundTag tag = readCompoundNBT();
             if (fluid == Fluids.EMPTY) {
                 return FluidStack.EMPTY;
@@ -631,7 +631,6 @@ public interface MCDataInput {
             return new FluidStack(fluid, amount, tag);
         }
     }
-     */
 
     /**
      * Reads an {@link Component} from the stream.
@@ -645,10 +644,10 @@ public interface MCDataInput {
     /**
      * Reads a registry object from the stream.
      *
-     * @param registry The {@link IForgeRegistry} to load the entry from.
+     * @param registry The {@link Registry} to load the entry from.
      * @return The registry object..
-     * @see MCDataOutput#writeRegistryIdDirect(IForgeRegistry, Object)
-     * @see MCDataOutput#writeRegistryIdDirect(IForgeRegistry, ResourceLocation)
+     * @see MCDataOutput#writeRegistryIdDirect(Registry, Object)
+     * @see MCDataOutput#writeRegistryIdDirect(Registry, ResourceLocation)
      */
     default <T> T readRegistryIdDirect(Registry<T> registry) {
         return registry.byId(readVarInt());
@@ -658,8 +657,8 @@ public interface MCDataInput {
      * Reads a registry object from the stream.
      *
      * @return The registry object.
-     * @see MCDataOutput#writeRegistryId(IForgeRegistry, Object)
-     * @see MCDataOutput#writeRegistryId(IForgeRegistry, ResourceLocation)
+     * @see MCDataOutput#writeRegistryId(Registry, Object)
+     * @see MCDataOutput#writeRegistryId(Registry, ResourceLocation)
      */
     default <T> T readRegistryId() {
         ResourceLocation rName = readResourceLocation();

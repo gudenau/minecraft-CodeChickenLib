@@ -3,6 +3,7 @@ package codechicken.lib.model;
 import codechicken.lib.util.ArrayUtils;
 import codechicken.lib.util.LambdaUtils;
 import com.mojang.math.Transformation;
+import io.github.fabricators_of_create.porting_lib.model.SimpleModelState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

@@ -6,6 +6,7 @@ import codechicken.lib.vec.*;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import io.github.fabricators_of_create.porting_lib.util.FluidAttributes;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -45,7 +46,7 @@ public class RenderUtils {
             return;
         }
         int alpha = 255;
-        FluidType type = stack.getFluid().getFluidType();
+        FluidAttributes type = stack.getFluid().getAttributes();
         if (type.isLighterThanAir()) {
             alpha = (int) (Math.pow(capacity, 0.4) * 255);
         } else {

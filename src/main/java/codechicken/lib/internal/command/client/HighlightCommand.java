@@ -62,7 +62,7 @@ public class HighlightCommand {
     }
 
     private static int setHighlightArg(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
-        return setHighlight(ctx, BlockPosArgument.getSpawnablePos(ctx, "pos"));
+        return setHighlight(ctx, codechicken.lib.extend.BlockPosArgument.getSpawnablePosE(ctx, "pos"));
     }
 
     private static int setHighlight(CommandContext<FabricClientCommandSource> ctx, BlockPos pos) {
