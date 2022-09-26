@@ -20,6 +20,7 @@ import codechicken.lib.vec.Vector3;
 import codechicken.lib.vec.Vertex5;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.*;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -292,7 +293,6 @@ public class CCRenderState {
         brightness = Minecraft.getInstance().getEntityRenderDispatcher().getPackedLightCoords(entity, frameDelta);
     }
 
-    /*TODO
     public void setFluidColour(FluidStack fluidStack) {
         setFluidColour(fluidStack, 0xFF);
     }
@@ -300,7 +300,6 @@ public class CCRenderState {
     public void setFluidColour(FluidStack fluidStack, int alpha) {
         this.baseColour = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack) << 8 | alpha;
     }
-     */
 
     public void setColour(Colour colour) {
         this.colour = colour.rgba();

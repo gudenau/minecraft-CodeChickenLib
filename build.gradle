@@ -26,11 +26,14 @@ repositories {
     }
 
     maven {
-        url "https://maven.jamieswhiteshirt.com/libs-release"
+        url 'https://maven.jamieswhiteshirt.com/libs-release'
         content {
-            includeGroup "com.jamieswhiteshirt"
+            includeGroup 'com.jamieswhiteshirt'
         }
     }
+
+    maven { url = "https://jitpack.io/" }
+    maven { url = "https://mvn.devos.one/snapshots/" }
 }
 
 dependencies {
@@ -43,6 +46,7 @@ dependencies {
     modImplementation(include("io.github.ladysnake:satin:${project.satinVersion}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reachEntityAttributesVersion}"))
     implementation(include("com.electronwill.night-config:core:${project.nightConfigVersion}"))
+    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:${project.portingLibVersion}"))
 }
 
 loom {
@@ -50,10 +54,10 @@ loom {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property 'version', project.version
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
     }
 }
 
@@ -72,7 +76,7 @@ java {
 }
 
 jar {
-    from("LICENSE") {
+    from('LICENSE') {
         rename { "${it}_${project.archivesBaseName}"}
     }
 }

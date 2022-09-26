@@ -1,9 +1,8 @@
 package codechicken.lib.fluid;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 
 public class FluidUtils {
 

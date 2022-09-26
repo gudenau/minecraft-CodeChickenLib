@@ -14,6 +14,7 @@ import codechicken.lib.util.ResourceUtils;
 import codechicken.lib.util.TransformUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import io.github.fabricators_of_create.porting_lib.model.IModelData;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -26,7 +27,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.event.ModelEvent;
-import codechicken.lib.render.ModelData;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraft.core.Registry;
 import org.apache.logging.log4j.LogManager;
@@ -143,7 +143,7 @@ public class ModelBakery {
         return missingModel;
     }
 
-    public static BakedModel getCachedModel(BlockState state, ModelData data) {
+    public static BakedModel getCachedModel(BlockState state, IModelData data) {
         if (state == null) {
             return missingModel;
         }

@@ -3,6 +3,7 @@ package codechicken.lib.data;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import com.mojang.math.Vector3f;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.core.BlockPos;
@@ -896,7 +897,6 @@ public interface MCDataOutput {
      * @param stack The {@link FluidStack}.
      * @return The same stream.
      */
-    /*TODO
     default MCDataOutput writeFluidStack(FluidStack stack) {
         if (stack.isEmpty()) {
             writeBoolean(false);
@@ -908,7 +908,6 @@ public interface MCDataOutput {
         }
         return this;
     }
-     */
 
     /**
      * Writes a {@link Component} to the stream.
@@ -958,7 +957,7 @@ public interface MCDataOutput {
      */
     default <T> MCDataOutput writeRegistryId(Registry<T> registry, T entry) {
         ResourceLocation rName = registry.key().location();
-        if (!registry.containsValue(entry)) {
+        if (registry.getResourceKey(entry).isEmpty()) {
             throw new IllegalArgumentException(format("Registry '{0}' does not contain entry '{1}'", rName, entry));
         }
         writeResourceLocation(rName);

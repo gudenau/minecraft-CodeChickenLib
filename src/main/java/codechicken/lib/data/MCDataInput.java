@@ -607,7 +607,7 @@ public interface MCDataInput {
             Item item = readRegistryIdDirect(Registry.ITEM);
             int count = readVarInt();
             ItemStack stack = new ItemStack(item, count);
-            stack.readShareTag(readCompoundNBT());
+            stack.setTag(readCompoundNBT());
             return stack;
         }
     }

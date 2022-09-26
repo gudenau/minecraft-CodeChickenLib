@@ -1,13 +1,13 @@
 package codechicken.lib.render.particle;
 
 import codechicken.lib.texture.TextureUtils;
+import io.github.fabricators_of_create.porting_lib.model.IModelData;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import codechicken.lib.render.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -31,7 +31,7 @@ public interface IModelParticleProvider extends BakedModel {
      * @param pos         The pos.
      * @return A Set of Textures to use.
      */
-    Set<TextureAtlasSprite> getHitEffects(@NotNull BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData modelData);
+    Set<TextureAtlasSprite> getHitEffects(@NotNull BlockHitResult traceResult, BlockState state, BlockAndTintGetter world, BlockPos pos, IModelData modelData);
 
     /**
      * Used to retrieve the destroy particles for the block.
@@ -41,6 +41,6 @@ public interface IModelParticleProvider extends BakedModel {
      * @param pos   The pos.
      * @return A Set of Textures to use.
      */
-    Set<TextureAtlasSprite> getDestroyEffects(BlockState state, BlockAndTintGetter world, BlockPos pos, ModelData data);
+    Set<TextureAtlasSprite> getDestroyEffects(BlockState state, BlockAndTintGetter world, BlockPos pos, IModelData data);
 
 }

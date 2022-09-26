@@ -1,6 +1,5 @@
 package codechicken.lib.internal.duck.client;
 
-import codechicken.lib.render.ModelData;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 

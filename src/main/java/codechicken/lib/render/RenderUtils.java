@@ -6,6 +6,7 @@ import codechicken.lib.vec.*;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -39,7 +40,6 @@ public class RenderUtils {
         );
     }
 
-    /*TODO
     public static void renderFluidCuboid(CCRenderState ccrs, Matrix4 mat, RenderType renderType, MultiBufferSource source, FluidStack stack, Cuboid6 bound, double capacity, double res) {
         if (stack.isEmpty()) {
             return;
@@ -57,7 +57,6 @@ public class RenderUtils {
         ccrs.baseColour = props.getTintColor(stack) << 8 | alpha;
         makeFluidModel(bound, material.sprite(), res).render(ccrs, mat);
     }
-     */
 
     public static CCModel makeFluidModel(Cuboid6 bound, TextureAtlasSprite tex, double res) {
         CCModel model = CCModel.newModel(VertexFormat.Mode.QUADS);
